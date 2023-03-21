@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+        Title="NexiTopNav"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ClientSideComponentId="e0586a8d-1ac6-4dfb-b750-af36e77cb8da"
+        ClientSideComponentProperties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </CustomAction>
+</Elements>

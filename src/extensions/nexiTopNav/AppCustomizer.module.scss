@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+
+.app {
+  .top {
+    height: 40px;
+    text-align: left;
+    line-height: 2.5;
+    font-weight: bold;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+
+
+  .bottom,
+  a,
+  a:visited,
+  a:hover {
+    height: 40px;
+    text-align: center;
+    line-height: 2.5;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .commandBar {
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .topNavigationContainer {
+    z-index: 10000000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 60px;
+    background-color: #FFFFFF88;
+  }
+
+  .breadcrumbContainer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .breadcrumbInner {
+    max-width: 1240px;
+    margin: auto
+  }
+
+  .footer {
+    background-color: #0078d4;
+    color: white;
+    padding: 0px;
+    margin: 0px;
+  }
+}

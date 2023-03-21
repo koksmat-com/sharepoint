@@ -1,0 +1,104 @@
+@import '~@fluentui/react/dist/sass/References.scss';
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+.nexiTabs {
+  overflow: hidden;
+  padding: 1em;
+  color: "[theme:bodyText, default: #323130]";
+  color: var(--bodyText);
+  &.teams {
+    font-family: $ms-font-family-fallbacks;
+  }
+}
+
+.welcome {
+  text-align: center;
+}
+
+.welcomeImage {
+  width: 100%;
+  max-width: 420px;
+}
+
+.links {
+  a {
+    text-decoration: none;
+    color: "[theme:link, default:#03787c]";
+    color: var(--link); // note: CSS Custom Properties support is limited to modern browsers only
+
+    &:hover {
+      text-decoration: underline;
+      color: "[theme:linkHovered, default: #014446]";
+      color: var(--linkHovered); // note: CSS Custom Properties support is limited to modern browsers only
+    }
+  }
+}
+.tabs {
+  /* Frame 2 */
+
+
+/* Auto layout */
+
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+
+gap: 8px;
+isolation: isolate;
+
+width: 236px;
+height: 48px;
+
+
+
+/* Inside auto layout */
+
+flex: none;
+order: 0;
+flex-grow: 0;
+}
+.selected {
+  background-color: #C4B6EC15;
+  color: #2D32A9;
+
+  border-bottom: 2px solid #2D32A9;
+}
+.unselected {
+  background-color: rgba(126, 135, 152, 0.05);
+
+  color: #000000;
+  border-bottom: 2px solid #2D32A900;
+}
+.tab {
+
+  
+  cursor: pointer;
+  // width: 188px;
+  height: 24px;
+  padding: 12px 24px;
+  /* .System/Button */
+  
+  font-family: 'Ubuntu', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+  white-space: nowrap;
+  /* Text/Interactive */
+ 
+
+  
+  
+  /* Inside auto layout */
+  
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  z-index: 2;
+}

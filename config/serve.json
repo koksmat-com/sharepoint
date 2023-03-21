@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
+  "port": 4321,
+  "https": false,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://christianiabpos.sharepoint.com/sites/niels/SitePages/xx.aspx",
+      "customActions": {
+        "e0586a8d-1ac6-4dfb-b750-af36e77cb8da": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    },
+    "nexiTopNav": {
+      "pageUrl": "https://christianiabpos.sharepoint.com/sites/niels/SitePages/xx.aspx",
+      "customActions": {
+        "e0586a8d-1ac6-4dfb-b750-af36e77cb8da": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    }
+  },
+  "initialPage": "https://enter-your-SharePoint-site/_layouts/workbench.aspx"
+}

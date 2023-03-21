@@ -1,0 +1,82 @@
+
+  .container {
+    max-width: 1050px;
+    margin: 0 auto;
+    display: flex;
+  }
+  
+  .main {
+    max-width: 800px;
+    background-color: #161822;
+    padding: 16px;
+    border-radius: 8px;
+    margin-left: 8px;
+  }
+  
+  nav {
+    width: 220px;
+    min-width: 220px;
+    padding: 16px;
+    margin: 8px;
+    align-self: flex-start;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 48px;
+    max-height: calc(100vh - 70px);
+    overflow: auto;
+  }
+  
+  @media screen and (max-width: 900px) {
+    nav {
+      display: none;
+    }
+  }
+  
+  a {
+    color: #A6ACC9;
+    text-decoration: none;
+  }
+  
+  li.active > a {
+    color: white;
+  }
+  
+  li > a:hover {
+    color: white;
+  }
+  
+  /*  Gives a little bit of buffer when header is navigated to */
+  h2, h3 {
+        padding-top: 16px;
+      margin-top: -16px; 
+  }
+
+
+
+  .outer-scroll.normal {
+    height: 9rem;
+    max-height: 25vh;
+}
+.outer-scroll.expanded {
+    height: calc(100vh - 2rem);
+    bottom: 1rem;
+}
+.outer-scroll.normal,
+.outer-scroll.expanded {
+    padding: 0 0.5rem;
+}
+@media screen and (min-width: 700px) {
+    /* On large screens, TOC doesn't have to fill width of screen. */
+    .outer-scroll.normal,
+    .outer-scroll.expanded {
+        width: 35vw;
+        max-width: 600px;
+    }
+}
+.outer-scroll.collapsed {
+    height: unset;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin-right: 0.5rem;
+    margin-left: auto;
+}

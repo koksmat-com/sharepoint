@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Nexi Navigation Web parts",
+    "id": "f3b33923-ad59-4786-b1aa-12ea9db679ef",
+    "version": "1.0.2.2",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Niels Gregers Johansen",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.16.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "A collection of webparts extending the navigation options."
+      },
+      "longDescription": {
+        "default": "A collection of webparts extending the navigation options."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "nexi-navigation Feature",
+        "description": "The feature that activates elements of the nexi-navigation solution.",
+        "id": "b8477d0a-ab27-4222-945f-b8afb4b7f3eb",
+        "version": "1.0.0.0",
+        "assets": {
+          "elementManifests": [
+            "elements.xml",
+            "ClientSideInstance.xml"
+          ]
+        }
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/nexi-navigation.sppkg"
+  }
+}

@@ -1,0 +1,38 @@
+.app {
+  .navBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 60px;
+    background-color: #FFFFFF88;
+    display:flex;
+    z-index: 10000000;
+  }
+  .topNavLink {
+    text-decoration: none;
+    color: #000000;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+ .navLeft {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    height: 40px;
+    text-align: left;
+    line-height: 2.5;
+    font-weight: bold;
+    flex-grow: 1;
+  }
+
+  .navRight {
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    height: 40px;
+    text-align: right;
+    line-height: 2.5;
+    font-weight: bold;
+  }
+}

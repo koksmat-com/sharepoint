@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "nexi-button-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/nexiButton/NexiButtonWebPart.js",
+          "manifest": "./src/webparts/nexiButton/NexiButtonWebPart.manifest.json"
+        }
+      ]
+    },
+    "nexi-tabs-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/nexiTabs/NexiTabsWebPart.js",
+          "manifest": "./src/webparts/nexiTabs/NexiTabsWebPart.manifest.json"
+        }
+      ]
+    },
+    "nexi-top-nav-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/nexiTopNav/NexiTopNavApplicationCustomizer.js",
+          "manifest": "./src/extensions/nexiTopNav/NexiTopNavApplicationCustomizer.manifest.json"
+        }
+      ]
+    },
+    "nexi-sticky-table-of-contents-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/nexiStickyTableOfContents/NexiStickyTableOfContentsWebPart.js",
+          "manifest": "./src/webparts/nexiStickyTableOfContents/NexiStickyTableOfContentsWebPart.manifest.json"
+        }
+      ]
+    },
+    "nexi-navigation-setup-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/nexiNavigationSetup/NexiNavigationSetupWebPart.js",
+          "manifest": "./src/webparts/nexiNavigationSetup/NexiNavigationSetupWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "NexiButtonWebPartStrings": "lib/webparts/nexiButton/loc/{locale}.js",
+    "NexiTabsWebPartStrings": "lib/webparts/nexiTabs/loc/{locale}.js",
+    "NexiTopNavApplicationCustomizerStrings": "lib/extensions/nexiTopNav/loc/{locale}.js",
+    "NexiStickyTableOfContentsWebPartStrings": "lib/webparts/nexiStickyTableOfContents/loc/{locale}.js",
+    "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js"
+   
+  }
+}

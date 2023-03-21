@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "id": "e39ac465-e936-47da-8e8d-30d7a6a8c305",
+  "alias": "NexiTabsWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "requiresCustomScript": false,
+  "supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab", "SharePointFullPage"],
+  "supportsThemeVariants": true,
+  "preconfiguredEntries": [{
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", 
+    "group": { "default": "Nexi" },
+    "title": { "default": "Tabs" },
+    "description": { "default": "NexiTabs description" },
+    "officeFabricIconFontName": "Page",
+    "properties": {
+      "tabs":"Tab 1\nTab 2\nTab 3",
+      "description": "NexiTabs",
+      "removePadding": true
+    }
+  }]
+}
