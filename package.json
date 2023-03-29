@@ -15,9 +15,8 @@
     "ship": "gulp package-solution --ship",
     "sasscompile": "gulp sass",
     "buildship": " gulp bundle --ship ",
-    "rimraf": "rimraf sharepoint/solution/*",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "rimraf": "rimraf sharepoint/solution/*"
+    
   },
   "dependencies": {
     "@microsoft/decorators": "1.16.1",
