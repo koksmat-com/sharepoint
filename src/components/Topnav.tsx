@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { NavigationNode } from '../helpers';
 import { BreadCrumb } from './BreadCrumb';
 import { SubNavigation } from './SubNavigation';
-import { TopNode } from './TopNode';
+import { TopNode, TopNodeRight } from './TopNode';
 import {
     PageContext
 } from '@microsoft/sp-page-context';
@@ -13,6 +13,7 @@ import {
 
 import NexiTopNavApplicationCustomizer from '../extensions/nexiTopNav/NexiTopNavApplicationCustomizer';
 import { ISPEventObserver } from '@microsoft/sp-core-library';
+import { SPFI } from '@pnp/sp';
 
 
 export interface ITopNavigation {
@@ -22,6 +23,7 @@ export interface ITopNavigation {
     applicationContext: NexiTopNavApplicationCustomizer,
     left: NavigationNode[];
     right: NavigationNode[];
+    sp: SPFI
 }
 
 class Observer implements ISPEventObserver {
@@ -69,18 +71,25 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     }, [observer])
 
     useEffect(() => {
+        try {
+           
+       
+
         const hubNav: HTMLElement = document.getElementsByClassName("ms-HubNav")[0] as HTMLElement
-        hubNav.style.display = isVisible ? "none" : "block"
+        if (hubNav) hubNav.style.display = isVisible ? "none" : "flex"
         const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
-        appBar.style.display = isVisible ? "none" : "block"
+        if (appBar) appBar.style.display = isVisible ? "none" : "block"
         const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
-        article.style.marginTop = isVisible ? "60px" : "0px"
+        if (article)  article.style.marginTop = isVisible ? "60px" : "0px"
         const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
-        spSiteHeader.style.display = isVisible ? "none" : "block"
+        if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
 
         const commandBarWrapper: HTMLElement = document.getElementsByClassName("commandBarWrapper")[0] as HTMLElement
-        commandBarWrapper.style.display = isVisible ? "none" : "block"
-
+        if (commandBarWrapper) commandBarWrapper.style.display = isVisible ? "none" : "flex"
+    }
+    catch(e){
+        console.log(e)
+    }
 
     }, [isVisible])
     const onMouseOver = (node: NavigationNode): void => {
@@ -120,23 +129,23 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     </div>
                     <div style={{ flexGrow: 1, display: "flex" }}>
 
-                        {props?.left.map((node: NavigationNode) => {
+                        {props?.left.map((node: NavigationNode,index) => {
                             node.onOver = onMouseOver
                             // node.onOut = onMouseOut
-                            return <TopNode {...node} />
+                            return <TopNode  key={index} {...node} />
                         })}
                     </div>
                     <div style={{ display: "flex" }}>
 
                         {props?.right.map((node: NavigationNode) => {
-                            return <TopNode {...node} />
+                            return <TopNodeRight {...node} />
                         })}
-                        <div onClick={() => {
+                        <div style={{position:"fixed",top:"30px",right:"10px"}} onClick={() => {
 
                             setIsVisible(false)
 
                         }}>
-                            <svg style={{ marginTop: "10px", cursor: "pointer" }} width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg style={{ marginTop: "0px", cursor: "pointer" }} width="16" height="16" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8.80923 13.9936C8.80923 11.4878 10.8405 9.45651 13.3463 9.45651C15.8522 9.45651 17.8835 11.4878 17.8835 13.9936C17.8835 16.4995 15.8522 18.5307 13.3463 18.5307C10.8405 18.5307 8.80923 16.4995 8.80923 13.9936ZM13.3463 11.2714C11.8428 11.2714 10.6241 12.4901 10.6241 13.9936C10.6241 15.4971 11.8428 16.7159 13.3463 16.7159C14.8499 16.7159 16.0686 15.4971 16.0686 13.9936C16.0686 12.4901 14.8499 11.2714 13.3463 11.2714Z" fill="black" />
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2359 1.66372C11.3408 1.26509 11.7012 0.987244 12.1135 0.987244H14.478C14.8903 0.987244 15.2508 1.26529 15.3556 1.66412L15.994 4.09438L18.3383 5.05848L20.0162 3.62462C20.3763 3.31691 20.9124 3.3379 21.2474 3.67281L23.6672 6.0926C24.0008 6.42623 24.0231 6.95986 23.7184 7.32014L22.2905 9.00894L23.233 11.2849L25.6689 11.9043C26.0712 12.0066 26.3527 12.3687 26.3527 12.7838L26.3526 15.176C26.3526 15.5891 26.0735 15.9501 25.6737 16.0541L23.2239 16.6915L22.2801 18.9705L23.7177 20.6662C24.0231 21.0264 24.0011 21.5607 23.6672 21.8946L21.2474 24.3144C20.9065 24.6553 20.3587 24.6701 19.9999 24.3483L19.9327 24.2883C19.8891 24.2494 19.8261 24.1933 19.7488 24.1247C19.5941 23.9874 19.3825 23.8007 19.1548 23.6025C18.874 23.358 18.586 23.1115 18.3516 22.9181L16.0555 23.869L15.4359 26.3154C15.3339 26.718 14.9716 27 14.5562 27H12.1364C11.7209 27 11.3584 26.7177 11.2566 26.3148L10.639 23.869L8.40852 22.9514L6.66022 24.3762C6.29936 24.6703 5.77449 24.6436 5.44533 24.3144L3.02553 21.8946C2.68544 21.5546 2.66978 21.0082 2.98983 20.6492L4.4422 19.02L3.48775 16.7558L1.00841 16.0789C0.613733 15.9712 0.339966 15.6126 0.339966 15.2035V12.7837C0.339966 12.362 0.630484 11.9959 1.04115 11.9001L3.45426 11.3369L4.38276 9.05405L2.9629 7.30645C2.66969 6.94555 2.69673 6.42141 3.02553 6.0926L5.44533 3.67281C5.78514 3.333 6.33095 3.31705 6.69003 3.63642L8.32432 5.09001L10.585 4.13705L11.2359 1.66372ZM12.813 2.80209L12.2265 5.03072C12.1548 5.303 11.9608 5.52659 11.7014 5.63595L8.5016 6.98478C8.17924 7.12067 7.80746 7.05914 7.54606 6.82664L6.12342 5.5613L4.8875 6.79721L6.12988 8.32637C6.33869 8.58338 6.39092 8.93372 6.26616 9.24045L4.95842 12.4557C4.84744 12.7285 4.61094 12.9305 4.3241 12.9975L2.15481 13.5038V14.5106L4.39146 15.1212C4.66024 15.1946 4.88042 15.3874 4.98865 15.6441L6.33724 18.8433C6.47328 19.166 6.41147 19.5382 6.17843 19.7996L4.9147 21.2172L6.14907 22.4516L7.68084 21.2033C7.93891 20.993 8.29143 20.9409 8.59931 21.0675L11.7521 22.3645C12.018 22.4739 12.2163 22.7028 12.2867 22.9815L12.8432 25.1852H13.85L14.408 22.982C14.4783 22.7043 14.6757 22.4761 14.9404 22.3664L18.1474 21.0383C18.4367 20.9185 18.7675 20.9563 19.0223 21.1385C19.3324 21.3602 19.896 21.8416 20.3464 22.2336C20.4226 22.2999 20.4969 22.3649 20.568 22.4272L21.7929 21.2023L20.5377 19.7217C20.3179 19.4624 20.2614 19.1019 20.3915 18.7878L21.72 15.5798C21.8288 15.317 22.0546 15.1205 22.3299 15.0489L24.5378 14.4744L24.5378 13.4893L22.345 12.9317C22.0676 12.8611 21.8398 12.6639 21.7303 12.3994L20.4022 9.19247C20.2722 8.87873 20.3284 8.51869 20.5476 8.25938L21.7937 6.78571L20.5574 5.5494L19.0957 6.79851C18.8369 7.01972 18.476 7.0774 18.1611 6.9479L14.886 5.60103C14.6229 5.49283 14.4258 5.2675 14.3535 4.99235L13.7781 2.80209H12.813Z" fill="black" />
                             </svg>
@@ -156,7 +165,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                         }}>
 
 
-                        <SubNavigation node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false) }} /></div>}
+                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); } } level={2} /></div>}
 
 
             </div>

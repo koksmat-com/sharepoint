@@ -17,7 +17,7 @@ import * as ReactDOM from "react-dom";
 //import { Dialog } from '@microsoft/sp-dialog';
 
 import * as strings from "NexiTopNavApplicationCustomizerStrings";
-import { getQuickLaunch, NavigationNode } from "../../helpers";
+import { enrichWithPageTabs, getQuickLaunch, NavigationNode } from "../../helpers";
 import { TopNavigation, ITopNavigation } from "../../components/Topnav";
 
 const LOG_SOURCE: string = "NexiTopNavApplicationCustomizer";
@@ -49,8 +49,9 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
 
     `;
     document.body.appendChild(script);
-
+    if (document.location.href.indexOf("_layouts/15") < 0) {
     this.drawTopNav();
+    }
     return Promise.resolve();
   }
 
@@ -65,27 +66,37 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
         "." + styles.topNavigationContainer
       );
       if (!topNavHTMLElement) {
-        debugger 
+         
         topNavHTMLElement = doc.createElement("div");
         topNavHTMLElement.innerHTML = "<div></div>";
         document.body.appendChild(topNavHTMLElement);
         const sp = spfi().using(SPFx(this.context));
         const hubsiteData  = await sp.web.hubSiteData()
-        const quickLaunch = getQuickLaunch(
+        const quickLaunch = [...getQuickLaunch(
           this.context.pageContext.legacyPageContext
-        );
-        
+        )]
+      
+       
+    
+
         const hubsiteNav: NavigationNode[] = hubsiteData.navigation; //await this.context.pageContext.web.getHubSiteData().then((data: IHubSiteWebData) => {
 
         const topNavigationProps: ITopNavigation = {
           applicationContext: this,
           left: quickLaunch,
           right: hubsiteNav,
+          sp
         };
         const elem: React.ReactElement<ITopNavigation> = React.createElement(
           TopNavigation,
           topNavigationProps
         );
+        ReactDOM.render(elem, topNavHTMLElement);
+        try {
+          await enrichWithPageTabs(sp, quickLaunch);
+        } catch (error) {
+          console.log(error);
+        }
         ReactDOM.render(elem, topNavHTMLElement);
       }
     };

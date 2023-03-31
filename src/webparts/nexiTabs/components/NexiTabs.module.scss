@@ -74,7 +74,7 @@ flex-grow: 0;
   
   cursor: pointer;
   // width: 188px;
-  height: 24px;
+  height: 100%;
   padding: 12px 24px;
   /* .System/Button */
   
@@ -84,12 +84,13 @@ flex-grow: 0;
   font-size: 16px;
   line-height: 24px;
   /* identical to box height, or 150% */
-  
+  align-self: stretch;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   text-align: center;
   font-feature-settings: 'tnum' on, 'lnum' on;
-  white-space: nowrap;
+  inline-size: min-content;
+  overflow-wrap: break-word;
   /* Text/Interactive */
  
 
