@@ -18,8 +18,8 @@ export const  findNodeInNavigation = (navigationNodes:NavigationNode[],url:strin
         if (node.Url === url) {
             return {node,parents}
         }else{
-            if (node.Children.length > 0) {
-                for (let i = 0; i < node.Children.length; i++) {
+            if (node?.Children?.length > 0) {
+                for (let i = 0; i < node.Children?.length; i++) {
                     const child = node.Children[i];
                     const result = compare(child,[node,...parents,])
                     if (result) {

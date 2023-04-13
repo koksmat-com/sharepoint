@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 interface ITabProps {
   text: string;
   isSelected: boolean;
+  nobreak: boolean;
   onSelect: () => void;
 }
 
@@ -42,7 +43,7 @@ const Tab = (props: ITabProps): JSX.Element => {
 
 
   return (
-    <div onClick={props?.onSelect} className={`${styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
+    <div onClick={props?.onSelect} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
   )
 
 }
@@ -50,7 +51,8 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
 
   const {
     tabs,
-    hasTeamsContext
+    hasTeamsContext,
+    noWhiteSpaceBreak
 
   } = props;
   const tabsElements = tabs?.split("\n")
@@ -98,11 +100,13 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
 
 
   return (
-    <section className={`${styles.nexiTabs} ${hasTeamsContext ? styles.teams : ''}`}>
 
-      <div className={`${styles.tabs} `} >
+
+    <section className={`${ styles.nexiTabs} ${hasTeamsContext ? styles.teams : ''}`}>
+
+      <div className={`${noWhiteSpaceBreak ? styles.tabsnobreak: styles.tabs} `} >
         {tabs?.split("\n").map((tab: string, ix: number) => {
-          return <Tab isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => { 
+          return <Tab nobreak={noWhiteSpaceBreak} isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => { 
             setHash( tab)
           //  setselectedTab(ix) 
           //  setselectedTabText(tab)

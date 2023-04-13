@@ -132,7 +132,7 @@ export const SubNavigation = (props: { level: number, node: NavigationNode, sp: 
                 })}
 
             </div>
-            {showLevel3 && selectedNavigationNode?.Children.length > 0 &&
+            {showLevel3 && selectedNavigationNode?.Children?.length > 0 &&
                 <div>
 
                     <SubNavigation level={props.level + 1} sp={props.sp} onNavigate={props.onNavigate} node={selectedNavigationNode} />

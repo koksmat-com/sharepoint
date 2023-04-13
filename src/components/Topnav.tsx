@@ -85,7 +85,10 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
 
         const commandBarWrapper: HTMLElement = document.getElementsByClassName("commandBarWrapper")[0] as HTMLElement
-        if (commandBarWrapper) commandBarWrapper.style.display = isVisible ? "none" : "flex"
+        if (commandBarWrapper) {
+            console.log("Wrapper",commandBarWrapper.style.display);
+            commandBarWrapper.style.display = isVisible ? "none" : ""
+        }
     }
     catch(e){
         console.log(e)
@@ -96,11 +99,16 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setselectedNavigationNode(node)
         setShowLevel2(true)
     }
-    if (!isVisible) return 
+    if (!isVisible) return <div style={{
+        position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000",cursor:"pointer", fontSize:"12px",
+        fontFamily: "'Ubuntu', sans-serif"
+    }} onClick={()=>{setIsVisible(true)}}>
+        Turn on Nexi branding
+    </div>
     return (
         <div
             style={{
-                position: 'fixed', top: 0, left: 0, width: "100vw", backgroundColor: "#ffffff", zIndex: "10000000",
+                position: 'fixed', top: 0, left: 0, width: "100vw",color: "#2D32AA", backgroundColor: "#ffffff", zIndex: "10000000",
 
 
             }}>

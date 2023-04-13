@@ -6,8 +6,8 @@ import { NavigationNode, pageTabs } from '../helpers';
 
 export const TopNode = (props: NavigationNode): JSX.Element => {
 
-    const onMouseOver = (): void => { props?.onOver(props); };
-    const onMouseOut = (): void => { props?.onOut(props); };
+    const onMouseOver = (): void => { if (props.onOver) props.onOver(props); };
+    const onMouseOut = (): void => { if (props.onOut)props.onOut(props); };
     const [children, setchildren] = React.useState<NavigationNode[]>(props.Children)
     const {Url,Title,Children} = props;
     const isLink = Url !== "http://linkless.header/";

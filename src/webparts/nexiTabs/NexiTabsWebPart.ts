@@ -3,7 +3,8 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
   
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
@@ -15,6 +16,7 @@ import { INexiTabsProps } from './components/INexiTabsProps';
 
 export interface INexiTabsWebPartProps {
   tabs: string;
+  nobreak: boolean;
 }
 
 /**
@@ -31,6 +33,7 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
       NexiTabs,
       {
         tabs: this.properties.tabs,
+        noWhiteSpaceBreak: this.properties.nobreak,
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
@@ -115,6 +118,10 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
                 PropertyPaneTextField('tabs', {
                   multiline:true,
                   label: "Tabs"
+                }),
+                PropertyPaneToggle('nobreak', {
+                  
+                  label: "No white space break"
                 })
               ]
             }
