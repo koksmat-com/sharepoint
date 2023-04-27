@@ -43,13 +43,13 @@ const Tab = (props: ITabProps): JSX.Element => {
 
 
   return (
-    <div onClick={props?.onSelect} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
+    <div onClick={props?.onSelect} style={{ alignSelf: "center"}} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
   )
 
 }
 export default function NexiTabs(props: INexiTabsProps): JSX.Element {
 
-  const {
+  const { 
     tabs,
     hasTeamsContext,
     noWhiteSpaceBreak

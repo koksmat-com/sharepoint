@@ -50,17 +50,15 @@ export default class NexiNavigationSetup extends React.Component<INexiNavigation
     } = this.props;
 
 
-    let quickLaunch = getQuickLaunch(context.pageContext.legacyPageContext)
-    let pages = getPages(quickLaunch);
+    const quickLaunch = getQuickLaunch(context.pageContext.legacyPageContext)
+    const pages = getPages(quickLaunch);
 
     return (
 
       <div>
         <h1>spWeb.web.allProperties!!##</h1>
         <PageInfo url="/sites/IssuerProducts/SitePages/Product-Catalogue-Configuration.aspx" spWeb={this.props.spWeb} />
-        <pre>
-
-        </pre>
+   
         <h1>pages</h1>
         <pre>
           {JSON.stringify(pages, null, 2)}

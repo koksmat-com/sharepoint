@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import * as React from 'react';
 import { NavigationNode } from '../helpers';
 
@@ -19,6 +20,7 @@ export const TOCTree = (props: { nodes: ITOCelement[], level: number }): JSX.Ele
         {
             nodes.map((node : ITOCelement, index: number) => {
         
+                // eslint-disable-next-line no-unused-expressions
                 {node?.childs.length  &&
                     <div key={index}>
                         {node.displayName}

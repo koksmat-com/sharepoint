@@ -26,5 +26,5 @@
       }
     }
   },
-  "initialPage": "https://enter-your-SharePoint-site/_layouts/workbench.aspx"
+  "initialPage": "https://{tenantDomain}/_layouts/workbench.aspx"
 }

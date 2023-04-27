@@ -41,6 +41,14 @@
           "manifest": "./src/webparts/nexiNavigationSetup/NexiNavigationSetupWebPart.manifest.json"
         }
       ]
+    },
+    "links-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/links/LinksWebPart.js",
+          "manifest": "./src/webparts/links/LinksWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -49,7 +57,7 @@
     "NexiTabsWebPartStrings": "lib/webparts/nexiTabs/loc/{locale}.js",
     "NexiTopNavApplicationCustomizerStrings": "lib/extensions/nexiTopNav/loc/{locale}.js",
     "NexiStickyTableOfContentsWebPartStrings": "lib/webparts/nexiStickyTableOfContents/loc/{locale}.js",
-    "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js"
-   
+    "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js",
+    "LinksWebPartStrings": "lib/webparts/links/loc/{locale}.js"
   }
 }

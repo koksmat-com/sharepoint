@@ -48,9 +48,9 @@ export function TOC({
 
   return (
     <nav aria-label="Table of Contents">
-      {expansion != State.Collapsed && (
+      {expansion !== State.Collapsed && (
         <div className="controls">
-          {expansion == State.Normal ? (
+          {expansion === State.Normal ? (
             <UnfoldMore onClick={expand} />
           ) : (
             <UnfoldLess onClick={normal} />
@@ -61,12 +61,12 @@ export function TOC({
       <div
         ref={scrollRef}
         className={classNames("outer-scroll", {
-          expanded: expansion == State.Expanded,
-          collapsed: expansion == State.Collapsed,
-          normal: expansion == State.Normal,
+          expanded: expansion === State.Expanded,
+          collapsed: expansion ===State.Collapsed,
+          normal: expansion=== State.Normal,
         })}
       >
-        {expansion == State.Collapsed ? (
+        {expansion === State.Collapsed ? (
           <Restore onClick={normal} />
         ) : (
           <>
@@ -105,7 +105,7 @@ function H({
 }) {
   const aRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
-    if (inView == entry.id && aRef.current) {
+    if (inView === entry.id && aRef.current) {
       scroll(aRef.current.offsetTop);
     }
   }, [inView]);
@@ -143,6 +143,7 @@ function useInViewId(postSelector: string, headingSelector: string) {
 
     const callback: IntersectionObserverCallback = (changes) => {
       for (const change of changes) {
+        // eslint-disable-next-line no-unused-expressions
         change.isIntersecting
           ? inViewSet.set(change.target.id, change.target as HTMLElement)
           : inViewSet.delete(change.target.id);
@@ -191,6 +192,7 @@ function getNestedHeadings(headings: readonly HTMLHeadingElement[]): HEntry[] {
       let last = traversalStack[traversalStack.length - 1];
       hLevel <= last.level;
       traversalStack.pop(), last = traversalStack[traversalStack.length - 1]
+    // eslint-disable-next-line no-empty
     ) {}
 
     const last = traversalStack[traversalStack.length - 1];
@@ -216,6 +218,7 @@ function useHeadingsData(postSelector: string, headingSelector: string) {
   useEffect(() => {
     const hs = getNestedHeadings(
       Array.from(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         document
           .querySelector(postSelector)!
           .querySelectorAll<HTMLHeadingElement>(headingSelector)

@@ -91,12 +91,14 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
           TopNavigation,
           topNavigationProps
         );
+        // eslint-disable-next-line @microsoft/spfx/pair-react-dom-render-unmount
         ReactDOM.render(elem, topNavHTMLElement);
         try {
           await enrichWithPageTabs(sp, quickLaunch);
         } catch (error) {
           console.log(error);
         }
+        // eslint-disable-next-line @microsoft/spfx/pair-react-dom-render-unmount
         ReactDOM.render(elem, topNavHTMLElement);
       }
     };
