@@ -49,6 +49,14 @@
           "manifest": "./src/webparts/links/LinksWebPart.manifest.json"
         }
       ]
+    },
+    "news-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/news/NewsWebPart.js",
+          "manifest": "./src/webparts/news/NewsWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -58,6 +66,7 @@
     "NexiTopNavApplicationCustomizerStrings": "lib/extensions/nexiTopNav/loc/{locale}.js",
     "NexiStickyTableOfContentsWebPartStrings": "lib/webparts/nexiStickyTableOfContents/loc/{locale}.js",
     "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js",
-    "LinksWebPartStrings": "lib/webparts/links/loc/{locale}.js"
+    "LinksWebPartStrings": "lib/webparts/links/loc/{locale}.js",
+    "NewsWebPartStrings": "lib/webparts/news/loc/{locale}.js"
   }
 }
