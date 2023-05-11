@@ -64,12 +64,23 @@ export const  parentLinkHtml = (text: string, link: string) : ILink => {
 
 export const  buildBreadcrumb = (webTitle:string,webUrl:string,navigationNodes:NavigationNode[],url:string) : ILink[] => {
     const {node,parents} = findNodeInNavigation(navigationNodes,url) || {node:null,parents:[]}
+    const root : ILink = {
+        text: 'Home',
+        isLink:true,
+        link: 'https://christianiabpos.sharepoint.com/sites/PrototypeNexiintranet-Group'
+    }
+
+    const self : ILink = {
+        text: document.title,
+        link: document.location.pathname,
+        isSelf:true
+    }
     if (node) {
-        const breadcrumb = [parentLinkHtml(webTitle,webUrl), ...parents.reverse().map(parent => parentLinkHtml(parent.Title,parent.Url))]
+        const breadcrumb = [root,parentLinkHtml(webTitle,webUrl), ...parents.reverse().map(parent => parentLinkHtml(parent.Title,parent.Url))]
         breadcrumb.push({isSelf:true, text:node.Title, link: node.Url})
         return breadcrumb
     }else{
-        return []
+        return [root,self]
     }
 
   }
