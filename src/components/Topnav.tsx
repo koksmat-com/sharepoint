@@ -27,21 +27,21 @@ export interface ITopNavigation {
 }
 
 class Observer implements ISPEventObserver {
-    
-    
-    public get instanceId() : string {
+
+
+    public get instanceId(): string {
         return "magicbox"
     }
 
-    public get componentId() : string {
+    public get componentId(): string {
         return "magicbox"
     }
-    
+
     isDisposed: boolean;
     dispose(): void {
-       // throw new Error('Method not implemented.');
+        // throw new Error('Method not implemented.');
     }
-    
+
 }
 
 
@@ -59,40 +59,40 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     }
 
     useEffect(() => {
-        if (observer){
-            
-        props.applicationContext.ctx.application.navigatedEvent.add(observer, pageContextChanged)
-    }
-    return () => {
-        if (observer){
-        props.applicationContext.ctx.application.navigatedEvent.remove(observer,pageContextChanged)
+        if (observer) {
+
+            props.applicationContext.ctx.application.navigatedEvent.add(observer, pageContextChanged)
         }
-    }
+        return () => {
+            if (observer) {
+                props.applicationContext.ctx.application.navigatedEvent.remove(observer, pageContextChanged)
+            }
+        }
     }, [observer])
 
     useEffect(() => {
         try {
-           
-       
 
-        const hubNav: HTMLElement = document.getElementsByClassName("ms-HubNav")[0] as HTMLElement
-        if (hubNav) hubNav.style.display = isVisible ? "none" : "flex"
-        const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
-        if (appBar) appBar.style.display = isVisible ? "none" : "block"
-        const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
-        if (article)  article.style.marginTop = isVisible ? "60px" : "0px"
-        const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
-        if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
 
-        const commandBarWrapper: HTMLElement = document.getElementsByClassName("commandBarWrapper")[0] as HTMLElement
-        if (commandBarWrapper) {
-            console.log("Wrapper",commandBarWrapper.style.display);
-            commandBarWrapper.style.display = isVisible ? "none" : ""
+
+            const hubNav: HTMLElement = document.getElementsByClassName("ms-HubNav")[0] as HTMLElement
+            if (hubNav) hubNav.style.display = isVisible ? "none" : "flex"
+            const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
+            if (appBar) appBar.style.display = isVisible ? "none" : "block"
+            const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
+            if (article) article.style.marginTop = isVisible ? "60px" : "0px"
+            const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
+            if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
+
+            const commandBarWrapper: HTMLElement = document.getElementsByClassName("commandBarWrapper")[0] as HTMLElement
+            if (commandBarWrapper) {
+                console.log("Wrapper", commandBarWrapper.style.display);
+                commandBarWrapper.style.display = isVisible ? "none" : ""
+            }
         }
-    }
-    catch(e){
-        console.log(e)
-    }
+        catch (e) {
+            console.log(e)
+        }
 
     }, [isVisible])
     const onMouseOver = (node: NavigationNode): void => {
@@ -100,15 +100,15 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setShowLevel2(true)
     }
     if (!isVisible) return <div style={{
-        position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000",cursor:"pointer", fontSize:"12px",
+        position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
-    }} onClick={()=>{setIsVisible(true)}}>
+    }} onClick={() => { setIsVisible(true) }}>
         Turn on Nexi branding
     </div>
     return (
         <div
             style={{
-                position: 'fixed', top: 0, left: 0, width: "100vw",color: "#2D32AA", backgroundColor: "#ffffff", zIndex: "10000000",
+                position: 'fixed', top: 0, left: 0, width: "100vw", color: "#2D32AA", backgroundColor: "#ffffff", zIndex: "10000000",
 
 
             }}>
@@ -137,10 +137,10 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     </div>
                     <div style={{ flexGrow: 1, display: "flex" }}>
 
-                        {props?.left.map((node: NavigationNode,index) => {
+                        {props?.left.map((node: NavigationNode, index) => {
                             node.onOver = onMouseOver
                             // node.onOut = onMouseOut
-                            return <TopNode  key={index} {...node} />
+                            return <TopNode key={index} {...node} />
                         })}
                     </div>
                     <div style={{ display: "flex" }}>
@@ -148,7 +148,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                         {props?.right.map((node: NavigationNode) => {
                             return <TopNodeRight {...node} />
                         })}
-                        <div style={{position:"fixed",top:"30px",right:"10px"}} onClick={() => {
+                        <div style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
 
                             setIsVisible(false)
 
@@ -173,16 +173,23 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                         }}>
 
 
-                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); } } level={2} /></div>}
+                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); }} level={2} /></div>}
 
 
             </div>
             {!showLevel2 &&
                 <div
 
-                    style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", width: "100vw", marginTop: "20px", marginBottom: "20px", height: "12px" }}>
-                   
+                    style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", width: "100vw", marginTop: "20px", marginBottom: "20px", height: "28px" }}>
+
                     {pageContext && <BreadCrumb pageContext={pageContext} />}
+                    <div style={{ flexGrow: 1 }}></div>
+
+                    <form style={{ display: "flex" }} action="https://www.office.com/search">
+                        <input type="text" id="q" name="q" autoFocus   />
+                        <input type="submit" value="Search" />
+                    </form>
+
 
                 </div>
             }
