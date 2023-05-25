@@ -44,7 +44,9 @@ class Observer implements ISPEventObserver {
 
 }
 
-
+function isInFrame() {
+    return (window.top !== window);
+}
 export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     const [isVisible, setIsVisible] = useState(true)
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
@@ -99,6 +101,27 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setselectedNavigationNode(node)
         setShowLevel2(true)
     }
+    if (isInFrame()) {
+        let article: HTMLElement = document.querySelector("article")
+        if (article) {
+            article.style.marginTop = "-20px"
+        }
+        return <div style={{
+            position: "fixed",
+            top: "0px",
+            zIndex: "1000012",
+            right: "0px",
+            fontSize: "14px",
+            color:"#242424",
+            fontFamily:"Segoe UI Web (West European)"
+        }}
+
+
+
+        ><a href="#" target="_top">Full screen</a></div>
+    }
+
+
     if (!isVisible) return <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
@@ -167,7 +190,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     <div
                         style={{
 
-                            width: "100%", gap: "32px", height: "auto",
+                            width: "100%", gap: "32px", height: "auto",minHeight:"120px",
                             display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto",
                             backgroundColor: "#1E1E1E;"
                         }}>
@@ -186,7 +209,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     <div style={{ flexGrow: 1 }}></div>
 
                     <form style={{ display: "flex" }} action="https://www.office.com/search">
-                        <input type="text" id="q" name="q" autoFocus   />
+                        <input type="text" id="q" name="q" autoFocus />
                         <input type="submit" value="Search" />
                     </form>
 

@@ -65,11 +65,16 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
       let topNavHTMLElement: HTMLElement = doc.querySelector(
         "." + styles.topNavigationContainer
       );
-      if (!topNavHTMLElement) {
-         
-        topNavHTMLElement = doc.createElement("div");
-        topNavHTMLElement.innerHTML = "<div></div>";
-        document.body.appendChild(topNavHTMLElement);
+     
+         if (!topNavHTMLElement){
+          topNavHTMLElement =  doc.createElement("div");
+          topNavHTMLElement.className = styles.topNavigationContainer
+          document.body.appendChild(topNavHTMLElement);
+         }
+ 
+        
+       // topNavHTMLElement.innerHTML = "<div></div>";
+       // document.body.appendChild(topNavHTMLElement);
         const sp = spfi().using(SPFx(this.context));
         const hubsiteData  = await sp.web.hubSiteData()
         const quickLaunch = [...getQuickLaunch(
@@ -100,7 +105,7 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
         }
         // eslint-disable-next-line @microsoft/spfx/pair-react-dom-render-unmount
         ReactDOM.render(elem, topNavHTMLElement);
-      }
+      
     };
     run().then().catch(console.error);
   }

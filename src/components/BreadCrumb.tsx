@@ -67,7 +67,7 @@ export const  buildBreadcrumb = (webTitle:string,webUrl:string,navigationNodes:N
     const root : ILink = {
         text: 'Home',
         isLink:true,
-        link: 'https://christianiabpos.sharepoint.com/sites/PrototypeNexiintranet-Group'
+        link: 'https://christianiabpos.sharepoint.com/sites/nexiintra-home'
     }
 
     const self : ILink = {
