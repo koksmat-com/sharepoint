@@ -11,7 +11,7 @@ import {
 } from '@microsoft/sp-page-context';
 
 
-import NexiTopNavApplicationCustomizer from '../extensions/nexiTopNav/NexiTopNavApplicationCustomizer';
+import NexiTopNavApplicationCustomizer, { NexiNavConfig } from '../extensions/nexiTopNav/NexiTopNavApplicationCustomizer';
 import { ISPEventObserver } from '@microsoft/sp-core-library';
 import { SPFI } from '@pnp/sp';
 
@@ -23,7 +23,8 @@ export interface ITopNavigation {
     applicationContext: NexiTopNavApplicationCustomizer,
     left: NavigationNode[];
     right: NavigationNode[];
-    sp: SPFI
+    sp: SPFI;
+    hubConfig: NexiNavConfig
 }
 
 class Observer implements ISPEventObserver {
@@ -112,8 +113,8 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             zIndex: "1000012",
             right: "0px",
             fontSize: "14px",
-            color:"#242424",
-            fontFamily:"Segoe UI Web (West European)"
+            color: "#242424",
+            fontFamily: "Segoe UI Web (West European)"
         }}
 
 
@@ -190,7 +191,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     <div
                         style={{
 
-                            width: "100%", gap: "32px", height: "auto",minHeight:"120px",
+                            width: "100%", gap: "32px", height: "auto", minHeight: "120px",
                             display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto",
                             backgroundColor: "#1E1E1E;"
                         }}>
@@ -207,11 +208,11 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
                     {pageContext && <BreadCrumb pageContext={pageContext} />}
                     <div style={{ flexGrow: 1 }}></div>
-
-                    <form style={{ display: "flex" }} action="https://www.office.com/search">
-                        <input type="text" id="q" name="q" autoFocus />
-                        <input type="submit" value="Search" />
-                    </form>
+                    {props.hubConfig.showSearch &&
+                        <form style={{ display: "flex" }} action="https://www.office.com/search">
+                            <input type="text" id="q" name="q" autoFocus />
+                            <input type="submit" value="Search" />
+                        </form>}
 
 
                 </div>
