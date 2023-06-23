@@ -13,7 +13,7 @@ const w = await sp.getTenantAppCatalogWeb();
   const { Title } = await sp.web.select("Title")()
   console.log(`Web title: ${Title}`);
   
-  await w.setStorageEntity("nexinav/sites/NexiISProductCatalogue", `{"enabled":true}`);
+  await w.setStorageEntity("nexinav/sites/NexiISProductCatalogue", `{"enabled":true,"hideHome":true}`);
   //sp.web.setStorageEntity()
  //let x = await w.getStorageEntity("Test2")
  //console.log(x.Value)
@@ -65,7 +65,7 @@ export type NexiNavConfig = {
   clarityId: string;
   matomoId: string;
   showSearch: boolean;
-  showHome: boolean;
+  hideHome: boolean;
 
 }
 

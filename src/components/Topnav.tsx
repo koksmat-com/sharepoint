@@ -83,7 +83,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
             if (appBar) appBar.style.display = isVisible ? "none" : "block"
             const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
-            if (article) article.style.marginTop = isVisible ? "60px" : "0px"
+            if (article) article.style.marginTop = isVisible ? "70px" : "0px"
             const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
             if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
 
@@ -206,7 +206,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
                     style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", width: "100vw", marginTop: "20px", marginBottom: "20px", height: "28px" }}>
 
-                    {pageContext && <BreadCrumb pageContext={pageContext} />}
+                    {pageContext && <BreadCrumb pageContext={pageContext} showHome={!props.hubConfig.hideHome} />}
                     <div style={{ flexGrow: 1 }}></div>
                     {props.hubConfig.showSearch &&
                         <form style={{ display: "flex" }} action="https://www.office.com/search">

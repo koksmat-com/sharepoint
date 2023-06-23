@@ -9,6 +9,7 @@ import {
 
 export interface IBreadCrumb {
     pageContext : PageContext
+    showHome :boolean
 }
 
 export const  findNodeInNavigation = (navigationNodes:NavigationNode[],url:string)  => {
@@ -62,9 +63,9 @@ export const  parentLinkHtml = (text: string, link: string) : ILink => {
   }
 
 
-export const  buildBreadcrumb = (webTitle:string,webUrl:string,navigationNodes:NavigationNode[],url:string) : ILink[] => {
+export const  buildBreadcrumb = (webTitle:string,webUrl:string,navigationNodes:NavigationNode[],url:string,showHome :boolean) : ILink[] => {
     const {node,parents} = findNodeInNavigation(navigationNodes,url) || {node:null,parents:[]}
-    const root : ILink = {
+    const root : ILink = !showHome ? null : {
         text: 'Home',
         isLink:true,
         link: 'https://christianiabpos.sharepoint.com/sites/nexiintra-home'
@@ -95,7 +96,7 @@ export const BreadCrumb = (props:IBreadCrumb): JSX.Element => {
     useEffect(() => {
     const quickLaunch = getQuickLaunch(pageContext.legacyPageContext)
     
-    setbreadcrumb(buildBreadcrumb(pageContext.web.title, pageContext.web.serverRelativeUrl, quickLaunch, serverRequestPath))
+    setbreadcrumb(buildBreadcrumb(pageContext.web.title, pageContext.web.serverRelativeUrl, quickLaunch, serverRequestPath,props.showHome))
     
     }, [serverRequestPath])
     return (<div style={{
@@ -108,6 +109,7 @@ export const BreadCrumb = (props:IBreadCrumb): JSX.Element => {
        {/* <a style={{textDecoration:"none",color:"#6E6E78"}} href={pageContext.web.serverRelativeUrl}>{pageContext.web.title}</a> */}
 
         {breadcrumb.map((link,index) => {
+            if (!link) return <span/>
             if (link.isSelf) {
                 return (<span key={index} style={{color:"#2D32AA",paddingLeft:"8px"}}>{link.text}</span>)
             }
