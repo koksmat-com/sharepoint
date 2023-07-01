@@ -9,6 +9,7 @@ export type onOver = (node: NavigationNode) => void;
 export interface NavigationNode {
     onOver?: onOver;
     onOut?: (node: NavigationNode) => void;
+ 
     Id?: number;
     Title: string;
     Url: string;

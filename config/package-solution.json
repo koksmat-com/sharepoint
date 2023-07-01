@@ -3,7 +3,7 @@
   "solution": {
     "name": "Nexi Navigation Web parts",
     "id": "f3b33923-ad59-4786-b1aa-12ea9db679ef",
-    "version": "1.0.9.2",
+    "version": "1.0.10.3",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

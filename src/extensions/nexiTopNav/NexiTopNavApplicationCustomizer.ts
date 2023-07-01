@@ -13,7 +13,8 @@ const w = await sp.getTenantAppCatalogWeb();
   const { Title } = await sp.web.select("Title")()
   console.log(`Web title: ${Title}`);
   
-  await w.setStorageEntity("nexinav/sites/NexiISProductCatalogue", `{"enabled":true,"hideHome":true}`);
+//  await w.setStorageEntity("nexinav/sites/NexiISProductCatalogue", `{"enabled":true,"hideHome":true}`);
+  await w.setStorageEntity("nexinav/sites/nexiintra-hub", `{"enabled":true,"hideHome":false,"showSiteTitle":true,"homeUrl":"https://christianiabpos.sharepoint.com/sites/nexiintra-home"}`);
   //sp.web.setStorageEntity()
  //let x = await w.getStorageEntity("Test2")
  //console.log(x.Value)
@@ -66,6 +67,10 @@ export type NexiNavConfig = {
   matomoId: string;
   showSearch: boolean;
   hideHome: boolean;
+  homeUrl: string;
+  showSiteTitle: boolean;
+  siteUrl : string;
+  siteTitle : string;
 
 }
 
@@ -164,7 +169,8 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
         
       if (!nexiNavConfig.enabled) return
       
-
+        nexiNavConfig.siteUrl = this.context.pageContext.web.absoluteUrl;
+        nexiNavConfig.siteTitle = this.context.pageContext.web.title;
 
         const hubsiteNav: NavigationNode[] = hubsiteData.navigation; //await this.context.pageContext.web.getHubSiteData().then((data: IHubSiteWebData) => {
 
@@ -173,7 +179,9 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
           left: quickLaunch,
           right: hubsiteNav,
           sp,
-          hubConfig: nexiNavConfig
+          hubConfig: nexiNavConfig,
+          homeUrl: nexiNavConfig.homeUrl
+
         };
         const elem: React.ReactElement<ITopNavigation> = React.createElement(
           TopNavigation,

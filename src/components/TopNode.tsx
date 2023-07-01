@@ -15,7 +15,7 @@ export const TopNode = (props: NavigationNode): JSX.Element => {
  
 
 
-    return (<div onMouseOver={onMouseOver} onMouseOut={onMouseOut}
+    return (<div onMouseOver={onMouseOver} onMouseLeave={onMouseOut}
 
 
         style={{
@@ -65,7 +65,7 @@ export const TopNode = (props: NavigationNode): JSX.Element => {
 };
 
 export interface NavigationNodeWithSiteURL extends NavigationNode {
-  //  siteURL: string;
+  isSelected?: boolean;
 }
 export const TopNodeRight = (props: NavigationNodeWithSiteURL): JSX.Element => {
     const {onOver,onOut} = props
@@ -106,7 +106,7 @@ export const TopNodeRight = (props: NavigationNodeWithSiteURL): JSX.Element => {
                     fontSize: "18px",
                     lineHeight: "27px",
                     fontWeight: 500,
-                    color: document.location.href.indexOf(props.Url)===-1  ? "#000000" : "#2D32AA" ,
+                    color: props.isSelected ? "#2D32AA" : (  document.location.href.indexOf(props.Url)===-1  ? "#000000" : "#2D32AA") ,
                     cursor: "pointer",
                     textDecoration: "none",
                     marginRight: "8px",

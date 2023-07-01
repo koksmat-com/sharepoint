@@ -1,25 +1,37 @@
 import { SPFI } from '@pnp/sp';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavigationNode, onOver, pageTabs } from '../helpers';
 
 
-export const SubMenuItem = (props: { node: NavigationNode, sp: SPFI, onNavigate: () => void }): JSX.Element => {
+export const SubMenuItem = (props: { selectParent: () => void,node: NavigationNode, sp: SPFI, onNavigate: () => void }): JSX.Element => {
     const [hover, setHover] = useState(false)
+    const [isSelected, setIsSelected] = useState(false)
     const isLink = props.node.Url !== "http://linkless.header/"
     const { Url } = props.node
     const [children, setChildren] = useState<NavigationNode[]>(props.node.Children)
 
 
+    const select = () => {
+        setIsSelected(true)
+    }
+
+    useEffect(() => {
+        props.selectParent()
 
 
-
+    }, [])
+    
     return (<div style={{ display: "flex" }}
         onMouseOver={() => {
+            console.log("Mouse enter submenu")
             setHover(true)
             props?.node?.onOver(props.node)
         }}
-        onMouseOut={() => setHover(false)}
+        onMouseLeave={() => {
+            console.log("Mouse leave submenu")
+            setHover(false)
+        }}
 
     >
         {!isLink &&
@@ -30,9 +42,9 @@ export const SubMenuItem = (props: { node: NavigationNode, sp: SPFI, onNavigate:
                     fontSize: "16px",
                     lineHeight: "24px",
                     fontWeight: 500,
-                    color: hover ? "#2D32AA" : "#000000",
+                    color:  (hover || isSelected) ? "#2D32AA" : "#000000",
                     cursor: "default",
-                    textDecoration: hover ? "underline" : "none",
+                    textDecoration: (hover || isSelected) ? "underline" : "none",
                     marginRight: "8px",
                     fontFamily: "'Ubuntu', sans-serif",
                     width: "184px",
@@ -46,7 +58,6 @@ export const SubMenuItem = (props: { node: NavigationNode, sp: SPFI, onNavigate:
         {isLink &&
             <a
                 onClick={() => {
-
                     props.onNavigate()
                 }}
                 style={{
@@ -54,9 +65,9 @@ export const SubMenuItem = (props: { node: NavigationNode, sp: SPFI, onNavigate:
                     fontSize: "16px",
                     lineHeight: "24px",
                     fontWeight: 500,
-                    color: hover ? "#2D32AA" : "#000000",
+                    color: (hover || isSelected) ? "#2D32AA" : "#000000",
                     cursor: "pointer",
-                    textDecoration: hover ? "underline" : "none",
+                    textDecoration: (hover || isSelected) ? "underline" : "none",
                     marginRight: "8px",
                     fontFamily: "'Ubuntu', sans-serif",
                     width: "184px",
@@ -79,20 +90,29 @@ export const SubMenuItem = (props: { node: NavigationNode, sp: SPFI, onNavigate:
 
 
 };
-export const SubNavigation = (props: { level: number, node: NavigationNode, sp: SPFI, onNavigate: () => void }): JSX.Element => {
+export const SubNavigation = (props: { selectParent: () => void, level: number, node: NavigationNode, sp: SPFI, onNavigate: () => void }): JSX.Element => {
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
     const [selectedNavigationNodeChilds, setselectedNavigationNodeChilds] = useState(null)
     const [showLevel3, setShowLevel3] = useState(false)
     const [showLevel4, setShowLevel4] = useState(false)
+
     const [level4, setLevel4] = useState<NavigationNode[]>([])
 
     const { Url } = props.node
 
     const isLink = Url !== "http://linkless.header/";
 
+    useEffect(() => {
+        props.selectParent()
 
+
+    }, [])
+
+    const select = () => {
+        props.selectParent()
+    }
     const onMouseOver: onOver = (node: NavigationNode): void => {
-        console.log("On mouse over level =",props.level)
+        console.log("On mouse over level =", props.level)
         const childNode: NavigationNode = { ...node }
         switch (props.level) {
             case 1:
@@ -103,16 +123,16 @@ export const SubNavigation = (props: { level: number, node: NavigationNode, sp: 
                 setselectedNavigationNode(node)
                 setShowLevel3(true)
                 break
-                case 3:
-                    setShowLevel3(true)
-                    
-                    setselectedNavigationNodeChilds(childNode)
-                    setShowLevel4(true)
-                    break;
+            case 3:
+                setShowLevel3(true)
+
+                setselectedNavigationNodeChilds(childNode)
+                setShowLevel4(true)
+                break;
             default:
                 break
         }
-    
+
     }
 
     return (
@@ -128,20 +148,20 @@ export const SubNavigation = (props: { level: number, node: NavigationNode, sp: 
 
                 {props?.node.Children.map((childNode: NavigationNode, key) => {
                     childNode.onOver = onMouseOver
-                    return <SubMenuItem sp={props.sp} key={key} node={childNode} onNavigate={props.onNavigate} />;
+                    return <SubMenuItem selectParent={select} sp={props.sp} key={key} node={childNode} onNavigate={props.onNavigate} />;
                 })}
 
             </div>
             {showLevel3 && selectedNavigationNode?.Children?.length > 0 &&
                 <div>
 
-                    <SubNavigation level={props.level + 1} sp={props.sp} onNavigate={props.onNavigate} node={selectedNavigationNode} />
+                    <SubNavigation selectParent={select} level={props.level + 1} sp={props.sp} onNavigate={props.onNavigate} node={selectedNavigationNode} />
                 </div>
             }
-            {showLevel4  &&
+            {showLevel4 &&
                 <div>
 
-                    <SubNavigation level={props.level + 1} sp={props.sp} onNavigate={props.onNavigate} node={selectedNavigationNodeChilds} />
+                    <SubNavigation selectParent={select} level={props.level + 1} sp={props.sp} onNavigate={props.onNavigate} node={selectedNavigationNodeChilds} />
                 </div>
             }
         </div>
