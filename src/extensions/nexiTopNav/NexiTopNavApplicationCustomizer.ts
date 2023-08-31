@@ -29,6 +29,7 @@ import {
 import styles from "./AppCustomizer.module.scss";
 
 import "@pnp/sp/webs";
+import "@pnp/sp/site-users/web";
 import "@pnp/sp/clientside-pages/web";
 import "@pnp/sp/navigation/web";
 import "@pnp/sp/hubsites";
@@ -132,7 +133,9 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
       // topNavHTMLElement.innerHTML = "<div></div>";
       // document.body.appendChild(topNavHTMLElement);
       const sp = spfi().using(SPFx(this.context));
+      
       const hubsiteData = await sp.web.hubSiteData()
+    
       const quickLaunch = [...getQuickLaunch(
         this.context.pageContext.legacyPageContext
       )]

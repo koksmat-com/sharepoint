@@ -9,11 +9,23 @@ import { TopNode, TopNodeRight } from './TopNode';
 import {
     PageContext
 } from '@microsoft/sp-page-context';
-
+import "@pnp/sp/site-users/web";
 
 import NexiTopNavApplicationCustomizer, { NexiNavConfig } from '../extensions/nexiTopNav/NexiTopNavApplicationCustomizer';
 import { ISPEventObserver } from '@microsoft/sp-core-library';
 import { SPFI } from '@pnp/sp';
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
+import { Panel } from 'office-ui-fabric-react/lib/Panel';
+import { useBoolean } from '@uifabric/react-hooks';
+import { set } from '@microsoft/sp-lodash-subset';
+
+export async function getToken(): Promise<string> {
+    const { context } = await (window as any).moduleLoaderPromise
+    const p = await context.aadTokenProviderFactory.getTokenProvider()
+    const token = await p.getToken("https://graph.microsoft.com")
+    return token
+}
+
 
 
 export interface ITopNavigation {
@@ -51,10 +63,10 @@ function isInFrame() {
 }
 
 const SiteTitle = (props: { show: boolean, Title: string, Url: string }) => {
-    
+
     if (!props.show) return null;
     return (
-        <TopNodeRight Title={props.Title} Url={props.Url} isSelected={true} select={()=>{return} }/>
+        <TopNodeRight Title={props.Title} Url={props.Url} isSelected={true} />
     )
 
 }
@@ -63,15 +75,65 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     const [isVisible, setIsVisible] = useState(true)
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
     const [showLevel2, setShowLevel2] = useState(false)
+    const [showSubNav, setshowSubNav] = useState(true)
+  
     const [observer] = useState<Observer>(new Observer())
+    const [token, setToken] = useState("")
     const [pageContext, setPageContext] = useState<PageContext>(null)
+    const [showMagicbox, setshowMagicbox] = useState(false)
+    const [message, setmessage] = useState("")
+
 
     const pageContextChanged = () => {
         console.log("pageContextChanged")
         setPageContext(props.applicationContext.ctx.pageContext)
         setShowLevel2(false)
+        setshowSubNav(true)
     }
+    type MessageTypes = "ensureuser" | "closemagicbox" | "resolveduser"
+    interface Message {
+        type: "ensureuser" | "closemagicbox"
+        messageId: string
+        str1: string
+    }
+    // This hook is listening an event that came from the Iframe
+    useEffect(() => {
+        const handler = async (ev: MessageEvent<{ type: MessageTypes, data: any }>) => {
+            console.log('ev', ev)
 
+            // if (typeof ev.data !== 'object') return
+            // if (!ev.data.type) return
+            // if (ev.data.type !== 'button-click') return
+            //if (!ev.data) return
+            //return "OK"
+            let r
+            try {
+                const m = ev.data
+                switch (m.type) {
+                    case "ensureuser":
+                        r = await props.sp.web.ensureUser(m.data)
+                        console.log("ensureUser", m.data, r)
+                        ev.source.postMessage({ "type": "resolveduser", data: r.data }, { targetOrigin: "*" });
+                        break;
+                    case "closemagicbox":
+                        setIsVisible(false)
+                        break
+                    default:
+                        break;
+                }
+                //setmessage(ev.data.message)
+
+            } catch (error) {
+                console.log("ERROR", error)
+            }
+
+        }
+
+        window.addEventListener('message', handler)
+
+        // Don't forget to remove addEventListener
+        return () => window.removeEventListener('message', handler)
+    }, [])
     useEffect(() => {
         if (observer) {
 
@@ -83,6 +145,12 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             }
         }
     }, [observer])
+    useEffect(() => {
+        const load = async () => {
+            setToken((await getToken()))
+        }
+        load().then(() => { console.log("") }).catch((e) => { console.log(e) })
+    }, [])
 
     useEffect(() => {
         try {
@@ -112,6 +180,12 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     const onMouseOver = (node: NavigationNode): void => {
         setselectedNavigationNode(node)
         setShowLevel2(true)
+       
+    }
+    const onMouseOverHubNav = (node: NavigationNode): void => {
+        setselectedNavigationNode(node)
+        setShowLevel2(true)
+        setshowSubNav(false)
     }
     if (isInFrame()) {
         let article: HTMLElement = document.querySelector("article")
@@ -137,7 +211,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     if (!isVisible) return <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
-    }} onClick={() => { setIsVisible(true) }}>
+    }} onClick={() => { setIsVisible(true), setshowMagicbox(false) }}>
         Turn on Nexi branding
     </div>
     return (
@@ -157,6 +231,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                 onMouseLeave={() => {
                     console.log("level2 off")
                     setShowLevel2(false)
+                    setshowSubNav(true)
                 }}
             >
                 <div
@@ -170,23 +245,24 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                             <path d="M47.3149 18.9883L43.4614 15.8535C42.2497 17.2911 40.164 18.9883 36.7674 18.9883C34.1255 18.9883 31.7022 17.5107 30.5898 15.0748L47.8909 12.0199C47.8909 10.3228 47.5532 8.70545 46.9573 7.24789C45.1895 2.97503 41.1175 0 36.1715 0C29.5172 0 24.4321 4.75206 24.4321 11.9999C24.4321 18.9683 29.4179 23.9999 36.7872 23.9999C42.2696 24.0199 45.5868 21.1447 47.3149 18.9883ZM36.1715 4.89183C38.7338 4.89183 40.8592 6.08982 41.7332 8.14639L30.1329 10.203C30.7487 6.78866 33.1721 4.89183 36.1715 4.89183Z" fill="#2D32A9" />
                         </svg>
                     </div></a>
-                    <div style={{ flexGrow: 1, display: "flex" }}>
 
-                        {props?.left.map((node: NavigationNode, index) => {
-                            node.onOver = onMouseOver
-                            // node.onOut = onMouseOut
-                            return <TopNode key={index} {...node} />
-                        })}
-                    </div>
-                    <div style={{ display: "flex" }}>
-                        <SiteTitle show={props?.hubConfig.showSiteTitle} Title={props?.hubConfig.siteTitle} Url={props?.hubConfig.siteUrl} />
+                    <div style={{ display: "flex", flexGrow: "1" }}>
+                        {/* <SiteTitle show={props?.hubConfig.showSiteTitle} Title={props?.hubConfig.siteTitle} Url={props?.hubConfig.siteUrl} /> */}
 
-                        {props?.right.map((node: NavigationNode) => {
-                            return <TopNodeRight {...node} />
+                        {props?.right.map((node: NavigationNode,index) => {
+                        node.onOver = onMouseOverHubNav
+                        // node.onOut = onMouseOut
+                        return <TopNode key={index} {...node} />
                         })}
+                         <div style={{ flexGrow: 1 }}></div>
+                        {(true || props.hubConfig.showSearch) &&
+                            <form style={{ display: "flex" ,padding:"6px"}} action="https://www.office.com/search">
+                                <input type="text" id="q" name="q" autoFocus style={{border:"1px",borderColor:"#888888"}} />
+                                <input type="submit" value="Search" style={{marginLeft:"10px",borderRadius:"20px",backgroundColor:"#2D32A9",color:"white",paddingLeft:"20px",paddingRight:"20px",border:"0px"}}/>
+                            </form>}
                         <div style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
 
-                            setIsVisible(false)
+                            setshowMagicbox(!showMagicbox)
 
                         }}>
                             <svg style={{ marginTop: "0px", cursor: "pointer" }} width="16" height="16" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +274,20 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
                     </div>
 
-                </div>
+                </div >
+                {showSubNav &&
+                <div style={{backgroundColor: "#eeeeee"}}>
+                    <div style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", paddingTop: "6px", paddingBottom: "6px", width: "100vw", gap: "32px", height: "40px" }}>
+                        <div style={{ flexGrow: 1, display: "flex" }}>
+                        <SiteTitle show={props?.hubConfig.showSiteTitle} Title={props?.hubConfig.siteTitle +" :"} Url={props?.hubConfig.siteUrl} />
+                            {props?.left.map((node: NavigationNode, index) => {
+                                node.onOver = onMouseOver
+                                // node.onOut = onMouseOut
+                                return <TopNode key={index} {...node} />
+                            })}
+                        </div>
+                       </div>
+                </div>}
                 {showLevel2 &&
                     <div
                         style={{
@@ -209,26 +298,40 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                         }}>
 
 
-                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); }} level={2} /></div>}
+                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); }} level={2} selectParent={function (): void {
+                            console.log("Select parent level 2");
+                        }} /></div>}
 
 
             </div>
-            {!showLevel2 &&
+            {!showLevel2 && false &&
                 <div
 
                     style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", width: "100vw", marginTop: "20px", marginBottom: "20px", height: "28px" }}>
 
                     {pageContext && <BreadCrumb pageContext={pageContext} showHome={!props.hubConfig.hideHome} />}
-                    <div style={{ flexGrow: 1 }}></div>
-                    {props.hubConfig.showSearch &&
-                        <form style={{ display: "flex" }} action="https://www.office.com/search">
-                            <input type="text" id="q" name="q" autoFocus />
-                            <input type="submit" value="Search" />
-                        </form>}
+
 
 
                 </div>
             }
+            {/* 
+Here is a panel which appear 100px under the top and is 300px wide
+*/}
+            {showMagicbox &&
+                <div style={{ position: "absolute" }}>
+                    <div style={{ position: "fixed", right: "0px", top: "80px", width: "100vw", height: "calc(100vh - 80px)" }}>
+                        <div style={{ display: "flex" }} >
+                            <div style={{ flexGrow: "1" }} />
+
+
+                        </div>
+
+                        <iframe src={"https://home.nexi-intra.com/magicbox?token=" + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: "transparent", width: "100%", height: "100%", border: "0px" }} />
+                    </div>
+                </div>
+            }
+
         </div>
     )
 }

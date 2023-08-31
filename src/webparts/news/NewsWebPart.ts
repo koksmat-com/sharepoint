@@ -45,7 +45,7 @@ export default class NewsWebPart extends BaseClientSideWebPart<INewsWebPartProps
   async connectToSharePoint() {
       const sp = spfi().using(SPFx(this.context));
       const hubsiteData  = await sp.web.hubSiteData()
-      debugger
+      
       
   }
   protected onInit(): Promise<void> {
