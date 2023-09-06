@@ -18,6 +18,7 @@ import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { useBoolean } from '@uifabric/react-hooks';
 import { set } from '@microsoft/sp-lodash-subset';
+import {FaUserCog} from "react-icons/fa"
 
 export async function getToken(): Promise<string> {
     const { context } = await (window as any).moduleLoaderPromise
@@ -260,7 +261,14 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                                 <input type="text" id="q" name="q" autoFocus style={{border:"1px",borderColor:"#888888"}} />
                                 <input type="submit" value="Search" style={{marginLeft:"10px",borderRadius:"20px",backgroundColor:"#2D32A9",color:"white",paddingLeft:"20px",paddingRight:"20px",border:"0px"}}/>
                             </form>}
-                        <div style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
+                            <div title="Click to change your profile" style={{ position: "fixed", top: "30px", right: "34px",cursor: "pointer"  }} onClick={() => {
+
+window.open("https://home.nexi-intra.com/profile/router")
+
+}}>
+<FaUserCog />
+</div>
+                        <div title="Click to get editor options" style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
 
                             setshowMagicbox(!showMagicbox)
 
