@@ -57,6 +57,14 @@
           "manifest": "./src/webparts/news/NewsWebPart.manifest.json"
         }
       ]
+    },
+    "rolluppage-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/rolluppage/RolluppageWebPart.js",
+          "manifest": "./src/webparts/rolluppage/RolluppageWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -67,6 +75,7 @@
     "NexiStickyTableOfContentsWebPartStrings": "lib/webparts/nexiStickyTableOfContents/loc/{locale}.js",
     "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js",
     "LinksWebPartStrings": "lib/webparts/links/loc/{locale}.js",
-    "NewsWebPartStrings": "lib/webparts/news/loc/{locale}.js"
+    "NewsWebPartStrings": "lib/webparts/news/loc/{locale}.js",
+    "RolluppageWebPartStrings": "lib/webparts/rolluppage/loc/{locale}.js"
   }
 }

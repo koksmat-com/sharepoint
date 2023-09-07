@@ -22,12 +22,12 @@
   "dependencies": {
     "@microsoft/decorators": "1.16.1",
     "@microsoft/sp-application-base": "1.16.1",
-    "@microsoft/sp-core-library": "1.17.1",
+    "@microsoft/sp-core-library": "1.17.3",
     "@microsoft/sp-dialog": "1.16.1",
-    "@microsoft/sp-lodash-subset": "1.17.1",
-    "@microsoft/sp-office-ui-fabric-core": "1.17.1",
-    "@microsoft/sp-property-pane": "1.17.1",
-    "@microsoft/sp-webpart-base": "1.17.1",
+    "@microsoft/sp-lodash-subset": "1.17.3",
+    "@microsoft/sp-office-ui-fabric-core": "1.17.3",
+    "@microsoft/sp-property-pane": "1.17.3",
+    "@microsoft/sp-webpart-base": "1.17.3",
     "@pnp/graph": "^3.17.0",
     "@pnp/sp": "^3.12.1",
     "office-ui-fabric-react": "^7.199.1",
@@ -35,7 +35,9 @@
     "react-dom": "17.0.1",
     "react-icons": "^4.10.1",
     "storybook-addon-package-json": "^2.0.0",
-    "tslib": "2.3.1"
+    "tslib": "2.3.1",
+    "@fluentui/react": "^7.199.1",
+    "@microsoft/sp-component-base": "1.17.3"
   },
   "devDependencies": {
     "@babel/core": "^7.21.0",
@@ -43,7 +45,7 @@
     "@microsoft/eslint-plugin-spfx": "1.16.1",
     "@microsoft/rush-stack-compiler-4.5": "0.2.2",
     "@microsoft/sp-build-web": "1.16.1",
-    "@microsoft/sp-module-interfaces": "1.17.1",
+    "@microsoft/sp-module-interfaces": "1.17.3",
     "@rushstack/eslint-config": "2.5.1",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
