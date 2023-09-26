@@ -19,7 +19,7 @@ import { Panel } from 'office-ui-fabric-react/lib/Panel';
 import { useBoolean } from '@uifabric/react-hooks';
 import { set } from '@microsoft/sp-lodash-subset';
 import {FaUserCog} from "react-icons/fa"
-import { MdOpenInFull} from "react-icons/md"
+import { ITopNavigation } from './Topnav';
 
 export async function getToken(): Promise<string> {
     const { context } = await (window as any).moduleLoaderPromise
@@ -30,18 +30,7 @@ export async function getToken(): Promise<string> {
 
 
 
-export interface ITopNavigation {
-    onOver?: (node: NavigationNode) => void;
-    onOut?: (node: NavigationNode) => void;
 
-    applicationContext: NexiTopNavApplicationCustomizer,
-    left: NavigationNode[];
-    right: NavigationNode[];
-    sp: SPFI;
-    hubConfig: NexiNavConfig;
-    homeUrl: string;
-    magicboxUrl: string;
-}
 
 class Observer implements ISPEventObserver {
 
@@ -69,12 +58,12 @@ const SiteTitle = (props: { show: boolean, Title: string, Url: string }) => {
 
     if (!props.show) return null;
     return (
-        <TopNodeRight Title={props.Title} Url={props.Url} isSelected={true} fontsize='14px' />
+        <TopNodeRight Title={props.Title} Url={props.Url} isSelected={true} />
     )
 
 }
 
-export const TopNavigation = (props: ITopNavigation): JSX.Element => {
+export const TopnavForProductCatalogue = (props: ITopNavigation): JSX.Element => {
     const [isVisible, setIsVisible] = useState(true)
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
     const [showLevel2, setShowLevel2] = useState(false)
@@ -93,9 +82,9 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setShowLevel2(false)
         setshowSubNav(true)
     }
-    type MessageTypes = "ensureuser" | "closemagicbox" | "resolveduser" | "context"
+    type MessageTypes = "ensureuser" | "closemagicbox" | "resolveduser"
     interface Message {
-        type: "ensureuser" | "closemagicbox" | "getcontext"
+        type: "ensureuser" | "closemagicbox"
         messageId: string
         str1: string
     }
@@ -121,13 +110,6 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     case "closemagicbox":
                         setIsVisible(false)
                         break
-                    case "context":
-                        
-                            const ctx = props.applicationContext.ctx.pageContext.legacyPageContext ?? {}
-                            const data  = JSON.stringify(ctx)
-                            
-                            ev.source.postMessage({ "type": "context", data }, { targetOrigin: "*" });
-                            break;                        
                     default:
                         break;
                 }
@@ -160,20 +142,6 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             setToken((await getToken()))
         }
         load().then(() => { console.log("") }).catch((e) => { console.log(e) })
-        var pageChrome :any = document.querySelector(".SPPageChrome");
-        var suppressHack = true
-         
-        var editMode = document.location.href.indexOf("Mode=Edit")===-1 ? false : true
-        if (pageChrome && !editMode) {
-            pageChrome.style.height = "10000px"; 
-            setTimeout(()=>{
-                var pageChrome : any = document.querySelector(".SPPageChrome");
-                pageChrome.style.height = "100%";
-            },2000)
-            
-        }
-        
-
     }, [])
 
     useEffect(() => {
@@ -228,7 +196,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
 
 
-        ><a href="#" target="_top"><MdOpenInFull/></a></div>
+        ><a href="#" target="_top">Full screen</a></div>
     }
 
 
@@ -272,25 +240,24 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
                     <div style={{ display: "flex", flexGrow: "1" }}>
                         {/* <SiteTitle show={props?.hubConfig.showSiteTitle} Title={props?.hubConfig.siteTitle} Url={props?.hubConfig.siteUrl} /> */}
-
+                        {props?.left.map((node: NavigationNode, index) => {
+                                node.onOver = onMouseOver
+                                // node.onOut = onMouseOut
+                                return <TopNode key={index} {...node} />
+                            })}
+                             <div style={{ flexGrow: 1 }}></div>
                         {props?.right.map((node: NavigationNode,index) => {
                         node.onOver = onMouseOverHubNav
                         // node.onOut = onMouseOut
-                        return <TopNode key={index} {...node} fontsize="14px" />
+                        return <TopNode key={index} {...node} />
                         })}
-                         <div style={{ flexGrow: 1 }}></div>
+                        
                         {( props.hubConfig.showSearch) &&
                             <form style={{ display: "flex" ,padding:"6px"}} action="https://www.office.com/search">
                                 <input type="text" id="q" name="q" autoFocus style={{border:"1px",borderColor:"#888888"}} />
                                 <input type="submit" value="Search" style={{marginLeft:"10px",borderRadius:"20px",backgroundColor:"#2D32A9",color:"white",paddingLeft:"20px",paddingRight:"20px",border:"0px"}}/>
                             </form>}
-                            <div title="Click to change your profile" style={{ position: "fixed", top: "30px", right: "34px",cursor: "pointer"  }} onClick={() => {
-
-window.open(`${props.magicboxUrl}/profile/router`)
-
-}}>
-<FaUserCog />
-</div>
+                          
                         <div title="Click to get editor options" style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
 
                             setshowMagicbox(!showMagicbox)
@@ -306,7 +273,7 @@ window.open(`${props.magicboxUrl}/profile/router`)
                     </div>
 
                 </div >
-                {showSubNav && props?.left.length > 0 &&
+                {false && showSubNav &&
                 <div style={{backgroundColor: "#eeeeee"}}>
                     <div style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", paddingTop: "6px", paddingBottom: "6px", width: "100vw", gap: "32px", height: "40px" }}>
                         <div style={{ flexGrow: 1, display: "flex" }}>
@@ -314,7 +281,7 @@ window.open(`${props.magicboxUrl}/profile/router`)
                             {props?.left.map((node: NavigationNode, index) => {
                                 node.onOver = onMouseOver
                                 // node.onOut = onMouseOut
-                                return <TopNode key={index} {...node} fontsize="14px"/>
+                                return <TopNode key={index} {...node} />
                             })}
                         </div>
                        </div>
@@ -329,15 +296,13 @@ window.open(`${props.magicboxUrl}/profile/router`)
                         }}>
 
 
-                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { 
-                            debugger
-                            setShowLevel2(false); }} level={2} selectParent={function (): void {
+                        <SubNavigation sp={props.sp} node={selectedNavigationNode} onNavigate={() => { setShowLevel2(false); }} level={2} selectParent={function (): void {
                             console.log("Select parent level 2");
                         }} /></div>}
 
 
             </div>
-            {!showLevel2 && false &&
+            {!showLevel2 &&
                 <div
 
                     style={{ display: "flex", maxWidth: "1260px", marginLeft: "auto", marginRight: "auto", width: "100vw", marginTop: "20px", marginBottom: "20px", height: "28px" }}>
@@ -360,7 +325,7 @@ Here is a panel which appear 100px under the top and is 300px wide
 
                         </div>
 
-                        <iframe src={`${props.magicboxUrl}/magicbox?token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false? "red":"transparent", width: "100%", height: "100%", border: "0px" }} />
+                        <iframe src={"https://home.nexi-intra.com/magicbox?token=" + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: "transparent", width: "100%", height: "100%", border: "0px" }} />
                     </div>
                 </div>
             }

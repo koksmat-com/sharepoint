@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "Nexi Navigation Web parts",
+    "name": "Intra365",
     "id": "f3b33923-ad59-4786-b1aa-12ea9db679ef",
-    "version": "2.0.1.2",
+    "version": "2.0.4.4",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -16,10 +16,10 @@
     },
     "metadata": {
       "shortDescription": {
-        "default": "A collection of webparts extending the navigation options."
+        "default": "Better navigation and some usefull webparts"
       },
       "longDescription": {
-        "default": "A collection of webparts extending the navigation options."
+        "default": "Intra365 by Koksmat is a community developed SharePoint extions focusing on make a better navigation experience in SharePoint as well as act as an integration manager of overlays"
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -27,8 +27,8 @@
     },
     "features": [
       {
-        "title": "nexi-navigation Feature",
-        "description": "The feature that activates elements of the nexi-navigation solution.",
+        "title": "intra365 Feature",
+        "description": "The feature that activates elements of the Intra365 solution.",
         "id": "b8477d0a-ab27-4222-945f-b8afb4b7f3eb",
         "version": "1.0.0.0",
         "assets": {

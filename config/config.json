@@ -65,6 +65,22 @@
           "manifest": "./src/webparts/rolluppage/RolluppageWebPart.manifest.json"
         }
       ]
+    },
+    "matrix-view-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/matrixView/MatrixViewWebPart.js",
+          "manifest": "./src/webparts/matrixView/MatrixViewWebPart.manifest.json"
+        }
+      ]
+    },
+    "shared-page-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/sharedPage/SharedPageWebPart.js",
+          "manifest": "./src/webparts/sharedPage/SharedPageWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -76,6 +92,8 @@
     "NexiNavigationSetupWebPartStrings": "lib/webparts/nexiNavigationSetup/loc/{locale}.js",
     "LinksWebPartStrings": "lib/webparts/links/loc/{locale}.js",
     "NewsWebPartStrings": "lib/webparts/news/loc/{locale}.js",
-    "RolluppageWebPartStrings": "lib/webparts/rolluppage/loc/{locale}.js"
+    "RolluppageWebPartStrings": "lib/webparts/rolluppage/loc/{locale}.js",
+    "MatrixViewWebPartStrings": "lib/webparts/matrixView/loc/{locale}.js",
+    "SharedPageWebPartStrings": "lib/webparts/sharedPage/loc/{locale}.js"
   }
 }

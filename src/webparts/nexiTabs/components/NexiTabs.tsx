@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styles from './NexiTabs.module.scss';
-import { INexiTabsProps } from './INexiTabsProps';
+import { INexiTabsProps, TabColors } from './INexiTabsProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { useState, useEffect } from 'react';
 
@@ -9,6 +9,7 @@ interface ITabProps {
   isSelected: boolean;
   nobreak: boolean;
   onSelect: () => void;
+  tabColors : TabColors
 }
 
 const useHash = () => {
@@ -43,7 +44,12 @@ const Tab = (props: ITabProps): JSX.Element => {
 
 
   return (
-    <div onClick={props?.onSelect} style={{ alignSelf: "center"}} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
+    <div onClick={props?.onSelect} style={{ alignSelf: "center",
+    backgroundColor:props.isSelected ? props.tabColors.activeBack : props.tabColors.passiveBack,
+    color:props.isSelected ? props.tabColors.activeText : props.tabColors.passiveText,
+    borderBottomColor : props.isSelected ? props.tabColors.activeBorder : props.tabColors.passiveBorder
+  
+  }} className={`${props.nobreak ? styles.tabnobreak : styles.tab}  `} >{props?.text}</div>
   )
 
 }
@@ -52,14 +58,42 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
   const { 
     tabs,
     hasTeamsContext,
-    noWhiteSpaceBreak
+    noWhiteSpaceBreak,
+    colors
 
   } = props;
+
+  /**
+   * 
+    .selected {
+  background-color: #C4B6EC15;
+  color: #2D32A9;
+
+  border-bottom: 2px solid #2D32A9;
+}
+.unselected {
+  background-color: rgba(126, 135, 152, 0.05);
+
+  color: #000000;
+  border-bottom: 2px solid #2D32A900;
+}
+   */
+  const defaultTabColors : TabColors = {
+    "activeText": "#2D32A9",
+    "activeBack": "#C4B6EC15",
+    "activeBorder": "#2px solid #2D32A9",
+
+    "passiveText" :"#000000",
+    "passiveBack": "rgba(126, 135, 152, 0.05)",
+    "passiveBorder": "2px solid #2D32A900"
+   
+  }
   const tabsElements = tabs?.split("\n")
   const [selectedTab, setselectedTab] = useState(0)
   const [selectedTabText, setselectedTabText] = useState("")
   const [hash, setHash] = useHash()
   const [sections, setSections] = useState<any[]>([])
+  const [tabColors, setTabColors] = useState<TabColors>(defaultTabColors)
   useEffect(() => {
    
       setselectedTabText(hash || tabsElements[0])
@@ -98,6 +132,18 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
      }
   }, [selectedTabText])
 
+  useEffect(() => {
+    
+   try {
+    const tabColors : TabColors = JSON.parse(colors)
+    setTabColors(tabColors)
+   } catch (error) {
+    setTabColors(defaultTabColors)
+   }
+     
+    
+ 
+  }, [colors])
 
   return (
 
@@ -106,7 +152,7 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
 
       <div className={`${noWhiteSpaceBreak ? styles.tabsnobreak: styles.tabs} `} >
         {tabs?.split("\n").map((tab: string, ix: number) => {
-          return <Tab nobreak={noWhiteSpaceBreak} isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => { 
+          return <Tab tabColors={tabColors} nobreak={noWhiteSpaceBreak} isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => { 
             setHash( tab)
           //  setselectedTab(ix) 
           //  setselectedTabText(tab)

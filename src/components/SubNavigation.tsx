@@ -47,7 +47,7 @@ export const SubMenuItem = (props: { selectParent: () => void,node: NavigationNo
                     textDecoration: (hover || isSelected) ? "underline" : "none",
                     marginRight: "8px",
                     fontFamily: "'Ubuntu', sans-serif",
-                    width: "184px",
+                  
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
                     overflow: "hidden"
@@ -70,7 +70,7 @@ export const SubMenuItem = (props: { selectParent: () => void,node: NavigationNo
                     textDecoration: (hover || isSelected) ? "underline" : "none",
                     marginRight: "8px",
                     fontFamily: "'Ubuntu', sans-serif",
-                    width: "184px",
+                  
                     whiteSpace: "nowrap",
                     textOverflow: "ellipsis",
                     overflow: "hidden"
@@ -144,7 +144,7 @@ export const SubNavigation = (props: { selectParent: () => void, level: number, 
                 setShowLevel4(false)
             }}>
 
-            <div style={{ width: "300px" }}>
+            <div style={{ minWidth: "300px" }}>
 
                 {props?.node.Children.map((childNode: NavigationNode, key) => {
                     childNode.onOver = onMouseOver

@@ -21,6 +21,7 @@ export interface NavigationNode {
     CurrentLCID?: number;
     Children?: NavigationNode[];
     OpenInNewWindow?: any;
+    fontsize?:string
 }
 
 

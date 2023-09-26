@@ -5,7 +5,7 @@ import { NavigationNode, pageTabs } from '../helpers';
 
 
 export const TopNode = (props: NavigationNode): JSX.Element => {
-
+    const {fontsize} = props
     const onMouseOver = (): void => { if (props.onOver) props.onOver(props); };
     const onMouseOut = (): void => { if (props.onOut)props.onOut(props); };
     const [children, setchildren] = React.useState<NavigationNode[]>(props.Children)
@@ -29,7 +29,9 @@ export const TopNode = (props: NavigationNode): JSX.Element => {
         {!isLink &&
             <span
                 style={{
-                    fontSize: "18px",
+                    textOverflow:"ellipsis",
+                    whiteSpace:"nowrap",
+                    fontSize: fontsize ?? "18px",
                     lineHeight: "27px",
                     fontWeight: 500,
                     color: "#000000",
@@ -44,7 +46,9 @@ export const TopNode = (props: NavigationNode): JSX.Element => {
         {isLink &&
             <a
                 style={{
-                    fontSize: "18px",
+                    textOverflow:"ellipsis",
+                    whiteSpace:"nowrap",
+                    fontSize: fontsize ?? "18px",
                     lineHeight: "27px",
                     fontWeight: 500,
                     color: "#000000",
@@ -88,7 +92,9 @@ export const TopNodeRight = (props: NavigationNodeWithSiteURL): JSX.Element => {
         {!isLink &&
             <span
                 style={{
-                    fontSize: "18px",
+                    textOverflow:"ellipsis",
+                    whiteSpace:"nowrap",
+                    fontSize: props.fontsize ?? "18px" ,
                     lineHeight: "27px",
                     fontWeight: 500,
                     color: "#000000",
@@ -103,7 +109,9 @@ export const TopNodeRight = (props: NavigationNodeWithSiteURL): JSX.Element => {
         {isLink &&
             <a
                 style={{
-                    fontSize: "18px",
+                    textOverflow:"ellipsis",
+                    whiteSpace:"nowrap",
+                    fontSize: props.fontsize ??"18px",
                     lineHeight: "27px",
                     fontWeight: 500,
                     color: props.isSelected ? "#2D32AA" : (  document.location.href.indexOf(props.Url)===-1  ? "#000000" : "#2D32AA") ,
