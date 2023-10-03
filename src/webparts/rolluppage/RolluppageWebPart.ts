@@ -22,6 +22,7 @@ export interface IRolluppageWebPartProps {
   fieldname: string;
   urlfield: string;
   height: string;
+  configureUrl: string;
 }
 
 export default class RolluppageWebPart extends BaseClientSideWebPart<IRolluppageWebPartProps> {
@@ -48,7 +49,8 @@ export default class RolluppageWebPart extends BaseClientSideWebPart<IRolluppage
       Rolluppage,
       {
       url:item[this.properties.urlfield]?.Url,
-      height:this.properties.height ?? "800px"
+      height:this.properties.height ?? "800px",
+      configureUrl:this.properties.configureUrl
       }
     );
 
@@ -140,7 +142,13 @@ export default class RolluppageWebPart extends BaseClientSideWebPart<IRolluppage
                 }),
                 PropertyPaneTextField('height', {
                   label: "Height of webpart in px, include px suffix or other units"
-                })
+                }),
+                PropertyPaneTextField('configureUrl', {
+                  label: "URL of profiling site"
+                }),
+
+
+                
               ]
             }
           ]

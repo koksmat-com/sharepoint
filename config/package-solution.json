@@ -3,7 +3,7 @@
   "solution": {
     "name": "Intra365",
     "id": "f3b33923-ad59-4786-b1aa-12ea9db679ef",
-    "version": "2.0.4.6",
+    "version": "2.0.4.8",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

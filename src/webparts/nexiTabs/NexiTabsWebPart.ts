@@ -125,22 +125,22 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
                   multiline:true,
                   label: "Tabs"
                 }),
-                PropertyPaneTextField('colors', {
-                  multiline:true,
-                  label: `Colors`,
-                  description:` Template:
-                  Copy and paste the following template into the field and replace the colors with your own.
+                // PropertyPaneTextField('colors', {
+                //   multiline:true,
+                //   label: `Colors`,
+                //   description:` Template:
+                //   Copy and paste the following template into the field and replace the colors with your own.
                   
-                  {
-                    "activeText": "#2D32A9",
-                    "activeBack": "#C4B6EC15",
-                    "activeBorder": "#2px solid #2D32A9",
+                //   {
+                //     "activeText": "#2D32A9",
+                //     "activeBack": "#C4B6EC15",
+                //     "activeBorder": "#2px solid #2D32A9",
                 
-                    "passiveText" :"#000000",
-                    "passiveBack": "rgba(126, 135, 152, 0.05)",
-                    "passiveBorder": "2px solid #2D32A900"
-                    }`
-                }),
+                //     "passiveText" :"#000000",
+                //     "passiveBack": "rgba(126, 135, 152, 0.05)",
+                //     "passiveBorder": "2px solid #2D32A900"
+                //     }`
+                // }),
                 PropertyPaneToggle('nobreak', {
                   
                   label: "No white space break"

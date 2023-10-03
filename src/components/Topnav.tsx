@@ -85,7 +85,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     const [pageContext, setPageContext] = useState<PageContext>(null)
     const [showMagicbox, setshowMagicbox] = useState(false)
     const [message, setmessage] = useState("")
-
+const [isDesktopWidth, setisDesktopWidth] = useState(true)
 
     const pageContextChanged = () => {
         console.log("pageContextChanged")
@@ -167,7 +167,12 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         }
 
         window.addEventListener('message', handler)
-
+        const mobile = window.innerWidth <1024
+        if (mobile){
+            setisDesktopWidth(false)
+        }
+       
+       
         // Don't forget to remove addEventListener
         return () => window.removeEventListener('message', handler)
     }, [])
@@ -209,25 +214,27 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
 
             const hubNav: HTMLElement = document.getElementsByClassName("ms-HubNav")[0] as HTMLElement
-            if (hubNav) hubNav.style.display = isVisible ? "none" : "flex"
+            if (hubNav) hubNav.style.display = (isVisible && isDesktopWidth) ? "none" : "flex"
+            const horizontalNav: HTMLElement = document.getElementsByClassName("ms-HorizontalNav")[0] as HTMLElement
+            if (horizontalNav) horizontalNav.style.display = (isVisible && isDesktopWidth) ? "none" : "flex"
             const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
-            if (appBar) appBar.style.display = isVisible ? "none" : "block"
+            if (appBar) appBar.style.display = (isVisible && isDesktopWidth)  ? "none" : "block"
             const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
-            if (article) article.style.marginTop = isVisible ? "70px" : "0px"
+            if (article) article.style.marginTop = (isVisible && isDesktopWidth)  ? "70px" : "0px"
             const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
-            if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
+            if (spSiteHeader) spSiteHeader.style.display = (isVisible && isDesktopWidth)  ? "none" : "block"
 
             const commandBarWrapper: HTMLElement = document.getElementsByClassName("commandBarWrapper")[0] as HTMLElement
             if (commandBarWrapper) {
                 console.log("Wrapper", commandBarWrapper.style.display);
-                commandBarWrapper.style.display = isVisible ? "none" : ""
+                commandBarWrapper.style.display = (isVisible && isDesktopWidth)  ? "none" : ""
             }
         }
         catch (e) {
             console.log(e)
         }
 
-    }, [isVisible])
+    }, [isVisible,isDesktopWidth])
     const onMouseOver = (node: NavigationNode): void => {
         setselectedNavigationNode(node)
         setShowLevel2(true)
@@ -237,6 +244,11 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setselectedNavigationNode(node)
         setShowLevel2(true)
         setshowSubNav(false)
+    }
+
+
+    if (!isDesktopWidth){
+        return <div></div>
     }
     if (isInFrame()) {
         let article: HTMLElement = document.querySelector("article")
