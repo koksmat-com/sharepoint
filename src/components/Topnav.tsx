@@ -93,7 +93,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         setShowLevel2(false)
         setshowSubNav(true)
     }
-    type MessageTypes = "ensureuser" | "closemagicbox" | "resolveduser" | "context"
+    type MessageTypes = "ensureuser" | "closemagicbox" | "resolveduser" | "context" |  "capabilities"  | "keep-standardnavigation"
     interface Message {
         type: "ensureuser" | "closemagicbox" | "getcontext"
         messageId: string
@@ -101,6 +101,8 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     }
     // This hook is listening an event that came from the Iframe
     useEffect(() => {
+        const keepStandardNavigation = localStorage.getItem("standardnavigation") === "true"
+        setIsVisible(!keepStandardNavigation)
         const handler = async (ev: MessageEvent<{ type: MessageTypes, data: any }>) => {
             console.log('ev', ev)
 
@@ -111,6 +113,26 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             //return "OK"
             let r
             try {
+
+
+                const b = {
+                    appCodeName : navigator.appCodeName,
+                    appName : navigator.appName,
+                    appVersion : navigator.appVersion,
+                    cookieEnabled : navigator.cookieEnabled,
+                    language : navigator.language,
+                    platform : navigator.platform,
+                    userAgent : navigator.userAgent,
+                    vendor : navigator.vendor,
+                    vendorSub : navigator.vendorSub,
+                    product : navigator.product,
+                    productSub : navigator.productSub,
+                    maxTouchPoints : navigator.maxTouchPoints,
+                    hardwareConcurrency : navigator.hardwareConcurrency,
+                    doNotTrack : navigator.doNotTrack,
+                    plugins : navigator.plugins,
+                    mimeTypes : navigator.mimeTypes
+                }
                 const m = ev.data
                 switch (m.type) {
                     case "ensureuser":
@@ -118,6 +140,9 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                         console.log("ensureUser", m.data, r)
                         ev.source.postMessage({ "type": "resolveduser", data: r.data }, { targetOrigin: "*" });
                         break;
+                    case "keep-standardnavigation":
+                        localStorage.setItem("standardnavigation",m.data)
+                        break    
                     case "closemagicbox":
                         setIsVisible(false)
                         break
@@ -127,6 +152,8 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                             const data  = JSON.stringify(ctx)
                             
                             ev.source.postMessage({ "type": "context", data }, { targetOrigin: "*" });
+                            const keepstandardnavigation = localStorage.getItem("standardnavigation")
+                            ev.source.postMessage({ "type": "capabilities", data:{canKeepHidden:keepstandardnavigation} }, { targetOrigin: "*" });
                             break;                        
                     default:
                         break;
@@ -235,7 +262,11 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     if (!isVisible) return <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
-    }} onClick={() => { setIsVisible(true), setshowMagicbox(false) }}>
+    }} onClick={() => { 
+        setIsVisible(true)
+        setshowMagicbox(false)
+        localStorage.setItem("standardnavigation","false")
+        }}>
         Turn on branding
     </div>
     return (

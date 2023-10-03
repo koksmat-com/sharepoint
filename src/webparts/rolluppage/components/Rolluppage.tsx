@@ -9,11 +9,14 @@ export default class Rolluppage extends React.Component<IRolluppageProps, {}> {
       url,
       height
     } = this.props;
-if (!url) return <div>Rollup page not found</div>
+
+   
+  
+  if(!url) return<div>Rollup page not found</div>
     return (
-      <section>
-        <iframe src={url} style={{width:"100%",height,border:0}} />
-      </section>
-    );
+  <section>
+    <iframe src={url} style={{ width: "100%", height, border: 0 }} />
+  </section>
+);
   }
 }

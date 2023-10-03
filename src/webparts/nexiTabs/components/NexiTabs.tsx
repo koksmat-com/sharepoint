@@ -41,16 +41,20 @@ const useHash = () => {
 };
 
 const Tab = (props: ITabProps): JSX.Element => {
+  return <div onClick={props?.onSelect} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
 
 
-  return (
-    <div onClick={props?.onSelect} style={{ alignSelf: "center",
-    backgroundColor:props.isSelected ? props.tabColors.activeBack : props.tabColors.passiveBack,
-    color:props.isSelected ? props.tabColors.activeText : props.tabColors.passiveText,
-    borderBottomColor : props.isSelected ? props.tabColors.activeBorder : props.tabColors.passiveBorder
+  // return (
+  //   <div onClick={props?.onSelect} style={{ alignSelf: "center",
+  //   borderTopLeftRadius:"10px",
+  //   borderTopRightRadius:"10px",
+  //   cursor:props.tabColors.cursor,
+  //   backgroundColor:props.isSelected ? props.tabColors.activeBack : props.tabColors.passiveBack,
+  //   color:props.isSelected ? props.tabColors.activeText : props.tabColors.passiveText,
+  //   borderBottom : props.isSelected ? props.tabColors.activeBorder : props.tabColors.passiveBorder
   
-  }} className={`${props.nobreak ? styles.tabnobreak : styles.tab}  `} >{props?.text}</div>
-  )
+  // }} className={` ${props.nobreak ? styles.tabnobreak : styles.tab}  `} >{props?.text}</div>
+  // )
 
 }
 export default function NexiTabs(props: INexiTabsProps): JSX.Element {
@@ -80,12 +84,12 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
    */
   const defaultTabColors : TabColors = {
     "activeText": "#2D32A9",
-    "activeBack": "#C4B6EC15",
+    "activeBack": "rgba(182, 185, 236, 0.5)",
     "activeBorder": "#2px solid #2D32A9",
-
+"cursor":"pointer",
     "passiveText" :"#000000",
-    "passiveBack": "rgba(126, 135, 152, 0.05)",
-    "passiveBorder": "2px solid #2D32A900"
+    "passiveBack": "rgba(182, 185, 236, 0.1)",
+    "passiveBorder": "2px solid #2D32A910"
    
   }
   const tabsElements = tabs?.split("\n")
@@ -136,7 +140,7 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
     
    try {
     const tabColors : TabColors = JSON.parse(colors)
-    setTabColors(tabColors)
+   // setTabColors(tabColors)
    } catch (error) {
     setTabColors(defaultTabColors)
    }

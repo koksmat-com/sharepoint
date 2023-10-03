@@ -1,4 +1,5 @@
 export interface TabColors {
+  cursor: string
   activeText: string
   activeBack: string
   activeBorder: string
