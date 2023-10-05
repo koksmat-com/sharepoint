@@ -194,7 +194,7 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
           this.context.pageContext.legacyPageContext
         )]
       } catch (error) {
-        debugger
+        
         console.log("error",error)
       }      
       

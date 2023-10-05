@@ -165,8 +165,12 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
             }
 
         }
+        const popstateHandler = async (ev: MessageEvent<{ type: MessageTypes, data: any }>) => {
+            console.log('popstate ev', ev)
+        }
 
         window.addEventListener('message', handler)
+        window.addEventListener('popstate', popstateHandler);
         const mobile = window.innerWidth <1024
         if (mobile){
             setisDesktopWidth(false)
@@ -174,7 +178,11 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
        
        
         // Don't forget to remove addEventListener
-        return () => window.removeEventListener('message', handler)
+        return () =>{
+             window.removeEventListener('message', handler)
+             window.removeEventListener('popstate', popstateHandler)
+            
+            }
     }, [])
     useEffect(() => {
         if (observer) {
@@ -250,6 +258,8 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
     if (!isDesktopWidth){
         return <div></div>
     }
+
+
     if (isInFrame()) {
         let article: HTMLElement = document.querySelector("article")
         if (article) {
@@ -270,7 +280,18 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
         ><a href="#" target="_top"><MdOpenInFull/></a></div>
     }
 
+// "disabled" and checked in - will continue in branch
+ const magicbuttonComms =  true ? <div><div : id="MAGICBUTTONCOMMS" style={{ position: "absolute" }}>
+                    <div style={{ position: "fixed", right: "0px", bottom: "80px", width: "100vw", height: "200px" }}>
+                        <div style={{ display: "flex" }} >
+                            <div style={{ flexGrow: "1" }} />
 
+
+                        </div>
+
+                        <iframe src={`${props.magicboxUrl}/magicbox?mode=1&token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false? "red":"transparent", width: "100%", height: "100%", border: "0px" }} />
+                    </div>
+                </div>
     if (!isVisible) return <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
@@ -280,6 +301,7 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
         localStorage.setItem("standardnavigation","false")
         }}>
         Turn on branding
+        {magicbuttonComms}
     </div>
     return (
         <div
@@ -407,7 +429,7 @@ Here is a panel which appear 100px under the top and is 300px wide
                     </div>
                 </div>
             }
-
+{magicbuttonComms}
         </div>
     )
 }
