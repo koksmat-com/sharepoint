@@ -281,7 +281,7 @@ const [isDesktopWidth, setisDesktopWidth] = useState(true)
     }
 
 // "disabled" and checked in - will continue in branch
- const magicbuttonComms =  true ? <div><div : id="MAGICBUTTONCOMMS" style={{ position: "absolute" }}>
+ const magicbuttonComms =  true ? <div></div> : <div  id="MAGICBUTTONCOMMS" style={{ position: "absolute" }}>
                     <div style={{ position: "fixed", right: "0px", bottom: "80px", width: "100vw", height: "200px" }}>
                         <div style={{ display: "flex" }} >
                             <div style={{ flexGrow: "1" }} />
