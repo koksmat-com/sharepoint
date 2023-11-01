@@ -13,7 +13,7 @@ import "@pnp/sp/site-users/web";
 
 import NexiTopNavApplicationCustomizer, { NexiNavConfig } from '../extensions/nexiTopNav/NexiTopNavApplicationCustomizer';
 import { ISPEventObserver } from '@microsoft/sp-core-library';
-import { SPFI } from '@pnp/sp';
+import { SPFI, containsInvalidFileFolderChars } from '@pnp/sp';
 import { SPHttpClient } from "@microsoft/sp-http"
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 import { Panel } from 'office-ui-fabric-react/lib/Panel';
@@ -23,7 +23,8 @@ import { FaUserCog } from "react-icons/fa"
 import { MdGTranslate, MdOpenInFull } from "react-icons/md"
 import { ContentType } from '@pnp/sp/content-types';
 import {CgInfinity} from "react-icons/cg"
-
+import * as tags  from "language-tags"
+import {Dropdown} from "office-ui-fabric-react/lib/Dropdown"
 export async function getToken(): Promise<string> {
     const { context } = await (window as any).moduleLoaderPromise
     const p = await context.aadTokenProviderFactory.getTokenProvider()
@@ -95,6 +96,55 @@ export interface Path {
     DecodedUrl: string
 }
 
+export interface ItemInfo {
+    Row: Row[]
+    FirstRow: number
+    FolderPermissions: string
+    LastRow: number
+    RowLimit: number
+    FilterLink: string
+    ForceNoHierarchy: string
+    HierarchyHasIndention: string
+    CurrentFolderSpItemUrl: string
+  }
+  
+  export interface Row {
+    ID: string
+    PermMask: string
+    FSObjType: string
+    HTML_x0020_File_x0020_Type: string
+    UniqueId: string
+    ProgId: string
+    NoExecute: string
+    ContentType: string
+    WelcomeViewId: string
+    WelcomePageCustomized: string
+    ContentTypeId: string
+    FileRef: string
+    _UIVersion: string
+    SMTotalSize: string
+    File_x0020_Size: string
+    _CommentFlags: string
+    _SPIsTranslation: string
+    "_SPIsTranslation.value": string
+    _SPTranslatedLanguages: string
+    _SPTranslationSourceItemId: string
+    ItemChildCount: string
+    FolderChildCount: string
+    A2ODMountCount: string
+    _StubFile: string
+    _ComplianceTag: string
+    _ExpirationDate: string
+    "_ExpirationDate.": string
+    owshiddenversion: string
+    _SPSitePageFlags: string
+    ContentVersion: string
+    DocConcurrencyNumber: string
+    _VirusStatus: string
+    Restricted: string
+  }
+  
+
 export const TopNavigation = (props: ITopNavigation): JSX.Element => {
     const [isVisible, setIsVisible] = useState(true)
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
@@ -111,11 +161,9 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
     const [translatedPageUrl, settranslatedPageUrl] = useState("")
 
-    const [translations, settranslations] = useState<PageTranslations>()
+    const [translations, settranslations] = useState<Item[]>([])
 
-    const [pageInItalian, setpageInItalian] = useState("")
-    const [pageInEnglish, setpageInEnglish] = useState("")
-    const [inItalian, setinItalian] = useState(true)
+   
     const [showtool, setshowtool] = useState<ToolProps|null>(null)
     const [showLeftBar, setshowLeftBar] = useState(false)
     const pageContextChanged = () => {
@@ -127,9 +175,48 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
             const c = props.applicationContext.ctx.pageContext
 
             const pageId = (c.listItem as any).uniqueId
+            // https://www.eliostruyf.com/multilingual-apis-modern-sharepoint/
+
+
+            const listId = props.applicationContext.ctx.pageContext.list.id;
+            const itemId = props.applicationContext.ctx.pageContext.listItem.id;
+            
+            const restAPI = `${props.applicationContext.ctx.pageContext.web.absoluteUrl}/_api/web/Lists(guid'${listId}')/RenderListDataAsStream`;
+            const responseData = await props.applicationContext.ctx.spHttpClient.post(restAPI, SPHttpClient.configurations.v1, {
+              body: JSON.stringify({
+                parameters: {
+                  RenderOptions: 2,
+                  ViewXml: `<View Scope="RecursiveAll">
+                              <ViewFields>
+                                <FieldRef Name="_SPIsTranslation"/>
+                                <FieldRef Name="_SPTranslatedLanguages"/>
+                                <FieldRef Name="_SPTranslatedLanguages"/>
+                                <FieldRef Name="_SPTranslationSourceItemId"/>
+                              </ViewFields>
+                              <Query>
+                                <Where>
+                                  <Eq>
+                                    <FieldRef Name="ID"/>
+                                    <Value Type="Number">${itemId}</Value>
+                                  </Eq>
+                                </Where>
+                              </Query>
+                              <RowLimit />
+                            </View>`
+                }
+              })
+            })
+
+
+            const data : ItemInfo=  await responseData.json()
+
+
+            //console.log(data.Row[0]._SPTranslationSourceItemId)
+            // debugger
+            const masterpageId =  (data.FirstRow === 1 ) && (data.Row[0]._SPTranslationSourceItemId) ?   data.Row[0]._SPTranslationSourceItemId : pageId
 
             const absoluteUrl = c.web.absoluteUrl
-            const x = await props.applicationContext.ctx.spHttpClient.get(`${absoluteUrl}/_api/sitepages/pages/GetTranslations('${pageId}')`, SPHttpClient.configurations.v1,
+            const x = await props.applicationContext.ctx.spHttpClient.get(`${absoluteUrl}/_api/sitepages/pages/GetTranslations('${masterpageId}')`, SPHttpClient.configurations.v1,
                 {
                     headers: [
                         ['accept', 'application/json;odata.metadata=none']
@@ -137,33 +224,8 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                 })
             const trans: PageTranslations = await x.json()
 
-            const it = trans.Items.find((i) => { return i.Culture === "it-it" })
-            const en = trans.Items.find((i) => { return i.Culture === "en-us" })
-            const currenturl = window.location.href.toLowerCase()
-
-            const enurl = en ? absoluteUrl + "/" + en.Path.DecodedUrl.toLowerCase() : ""
-            const iturl = it ? absoluteUrl + "/" + it.Path.DecodedUrl.toLowerCase() : ""
-
-            const isCurrentPageInItalian = currenturl.indexOf(iturl) > -1
-            const hasItalianTranslation = it ? true : false
-
-            setpageInEnglish("")
-            setpageInItalian("")
-
-            if (isCurrentPageInItalian) {
-
-                setpageInEnglish(enurl.replace("/it",""))
-
-            } else {
-                if (hasItalianTranslation) {
-                    setpageInItalian(iturl)
-                }
-            }
-
-
-
-
-            settranslations(trans)
+            const translations = trans.Items.filter(i=>i.HasPublishedVersion).map(i => i)
+            settranslations(translations.map(t=>{return {...t,Title:t.Culture,Path:{DecodedUrl:absoluteUrl + "/" + t.Path.DecodedUrl}}}))
 
         }
         more()
@@ -182,6 +244,33 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         iconUrl: string
       }
     // This hook is listening an event that came from the Iframe
+
+
+
+    function getLanguageName(code:string){
+        const lang  = [
+            {code: "en-us",name:"English",order:1},
+            {code:  "it-it" ,name: "Italian",order:2},
+             {code:  "fr-fr" ,name: "French",order:3},
+             {code:  "de-de" ,name: "German",order:4},
+             {code:  "es-es" ,name: "Spanish",order:5},
+             {code:  "nl-nl" ,name: "Dutch",order:6},
+             {code:  "pt-br" ,name: "Portuguese",order:7},
+             {code:  "zh-cn" ,name: "Chinese",order:8},
+             {code:  "ja-jp" ,name: "Japanese", order:9},
+             {code:  "ko-kr" ,name: "Korean",order:10},
+         
+             {code:  "pl-pl" ,name: "Polish",order:11},
+             {code:  "el-gr" ,name: "Greek",order:12},
+             {code:  "da-dk" ,name: "Danish",order:13},
+             {code:  "sv-se" ,name: "Swedish",order:14},
+             {code:  "no-nb" ,name: "Norwegian",order:15},
+             {code:   "fi-fi" ,name: "Finnish",order:16},
+             ]
+
+        return lang.find(l=>l.code===code) ?? {code,name:code,order:999}
+
+    }
     useEffect(() => {
         const keepStandardNavigation = localStorage.getItem("standardnavigation") === "true"
         const showLeftBarValue = localStorage.getItem("showleftbar") === "true"
@@ -401,7 +490,18 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
         </div>
     </div>
 
-
+const navigateTranslation = translations.length === 0 ? <div></div>: <div style={{marginTop:"16px",fontSize: "12px",fontFamily: "'Ubuntu', sans-serif"}}>
+Language: {translations.map((t:Item,key) => {
+                                
+                                
+    const isCurrent = t.Path.DecodedUrl.toLowerCase() === window.location.href.toLowerCase().split("?")[0]
+    return (
+    <a href={t.Path.DecodedUrl} key={key}  style={{textDecoration:"none",color:"#000000",borderBottom:isCurrent?"2px solid #000000":"2px solid #ffffff",marginRight:"4px",fontSize: "12px",cursor:"pointer",
+    fontFamily: "'Ubuntu', sans-serif"}}> {
+        getLanguageName(t.Culture).name}</a>
+        
+        
+)})}</div>
 
     if (!isVisible) return <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
@@ -460,22 +560,23 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                                 <input type="text" id="q" name="q" autoFocus style={{ border: "1px", borderColor: "#888888" }} />
                                 <input type="submit" value="Search" style={{ marginLeft: "10px", borderRadius: "20px", backgroundColor: "#2D32A9", color: "white", paddingLeft: "20px", paddingRight: "20px", border: "0px" }} />
                             </form>}
+                           
+                           
+                        
+                         
+                                
+                        
+                           
                         <div style={{ position: "fixed", top: "30px", right: "60px" }} >
-                            {pageInItalian &&
-                                <a href={pageInItalian}>
+                            <div id="MAGICBUTTONTOOLBAR">
 
-                                    <img src="https://nexiintra365.blob.core.windows.net/public/icon_Italy_.png" width="16px" title="Leggi in italiano" alt="Leggi in italiano" />
-
-
-                                </a>}
-                            {pageInEnglish && <a href={pageInEnglish} >
-
-                                <img src="https://nexiintra365.blob.core.windows.net/public/icon_United Kingdom_.png" width="16px" title="Read in english" alt="Read in english" />
-
-
-
-
-                            </a>}</div>
+                            </div>
+                           
+                        
+                         
+                                
+                        
+                            </div>
 
                         <div title="Click to change your profile" style={{ position: "fixed", top: "30px", right: "34px", cursor: "pointer" }} onClick={() => {
 
@@ -513,6 +614,10 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                                     // node.onOut = onMouseOut
                                     return <TopNode key={index} {...node} fontsize="14px" />
                                 })}
+                            </div>
+                            <div>
+                            {navigateTranslation}
+                            
                             </div>
                         </div>
                     </div>}
@@ -579,3 +684,11 @@ Here is a panel which appear 100px under the top and is 300px wide
         </div>
     )
 }
+
+
+
+/**
+ * 
+ * let xxx = document.getElementById("MAGICBUTTONTOOLBAR");xxx.appendChild(Array.from(document.querySelectorAll('[data-automation-id="LanguageSelector"]'))[0])
+
+ */
