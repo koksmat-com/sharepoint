@@ -20,6 +20,7 @@ export interface IRolluppageWebPartProps {
   queryparameter: string;
   listname: string;
   fieldname: string;
+  fieldname2: string;
   urlfield: string;
   height: string;
   configureUrl: string;
@@ -42,9 +43,21 @@ export default class RolluppageWebPart extends BaseClientSideWebPart<IRolluppage
       searchFor = localStorage.getItem(this.properties.queryparameter) ?? ""
     }
     const matchField = this.properties.fieldname
+    const matchField2 = this.properties.fieldname2
     const items: any[] = await sp.web.lists.getByTitle( this.properties.listname).items();
    
-    const item = items.find(item=>{return item[matchField].toLowerCase() === searchFor})
+    const item = items.find(item=>{
+
+      const f1 = decodeURIComponent(item[matchField]??"")
+      const f2 = decodeURIComponent(item[matchField2]??"")
+
+      console.log(f1,f2,searchFor)
+      
+      const match = (f1.toLowerCase() === searchFor) || (f2.toLowerCase() === searchFor)
+      return match
+    
+    })
+
     const element: React.ReactElement<IRolluppageProps> = React.createElement(
       Rolluppage,
       {
@@ -137,6 +150,9 @@ export default class RolluppageWebPart extends BaseClientSideWebPart<IRolluppage
                 PropertyPaneTextField('fieldname', {
                   label: "Field Name to match"
                 }),
+                PropertyPaneTextField('fieldname2', {
+                  label: "Alternative field Name to match"
+                }),                
                 PropertyPaneTextField('urlfield', {
                   label: "Field Name with URL"
                 }),

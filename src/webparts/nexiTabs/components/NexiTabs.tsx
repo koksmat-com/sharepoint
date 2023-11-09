@@ -120,7 +120,12 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
      // el.style.backgroundColor = title === selectedTabText ? "green": "red"
      
      el.style.display = title === selectedTabText ? "block": none
-     
+     el.style.border =  "2px solid #2D32A9"
+     //el.style.backgroundColor = "#2D32A910"
+     el.style.borderRadius="16px"
+     el.style.marginTop="-48px"
+     el.style.marginBottom="16px"
+     //el.style.borderRadius="16px"
       sec.push(title)
 
       setSections(sec)
