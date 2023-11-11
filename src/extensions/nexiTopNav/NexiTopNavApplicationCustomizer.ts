@@ -75,7 +75,7 @@ export type NexiNavConfig = {
   showSiteTitle: boolean;
   siteUrl: string;
   siteTitle: string;
-
+logoUrl: string
   magicboxurl: string
 }
 
@@ -100,7 +100,7 @@ export interface ConfigItem {
   ShowSearch?: boolean
   DonttrackId?: number[]
   DonttrackStringId?: string[]
-  LogoURL: any
+  LogoURL: string
   ContentTypeId: string
   OData__ColorTag: any
   ComplianceAssetId: any
@@ -219,7 +219,7 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
       const defaultConfig: NewType = {
         enabled: true,
         parents: [],
-
+        logoUrl: configItem.LogoURL ?? "",
         showSearch: configItem.ShowSearch,
         hideHome: false,
         homeUrl: configItem.HomeURL,
@@ -257,6 +257,7 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
         hubConfig: nexiNavConfig,
         homeUrl: nexiNavConfig.homeUrl,
         magicboxUrl: nexiNavConfig.magicboxurl,
+        logoUrl: nexiNavConfig.logoUrl
 
       };
       const elem: React.ReactElement<ITopNavigation> = React.createElement(
