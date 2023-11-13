@@ -91,11 +91,23 @@ flex-grow: 1;
   border-right: 2px solid #2D32A9;
   border-top: 2px solid #2D32A9
 }
+.selectednoborder {
+  background-color: rgba(182, 185, 236, 0.2);
+  color: #2D32A9;
+
+  border-bottom: 2px solid #2D32A9;
+}
 .unselected {
   background-color: rgba(126, 135, 152, 0.05);
 
   color: #000000;
   border-bottom: 2px solid #2D32A900;
+}
+.unselectednoborder {
+  background-color: rgba(126, 135, 152, 0.05);
+
+  color: #000000;
+  border-bottom: 2px solid #2D32A920;
 }
 
 .selected:hover {
@@ -107,7 +119,11 @@ color:#ffffff;
   border-bottom: 2px solid #2D32A900;
 }
 
+.unselectednoborder:hover {
 
+  border-bottom: 2px solid #2D32A9;
+  }
+  
 .tab {
 
   border-top-left-radius: 10px;

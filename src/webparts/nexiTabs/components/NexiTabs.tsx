@@ -8,18 +8,19 @@ interface ITabProps {
   text: string;
   isSelected: boolean;
   nobreak: boolean;
+  noborder: boolean;
   onSelect: () => void;
-  tabColors : TabColors
+  tabColors: TabColors
 }
 
 const useHash = () => {
-  const clean = (h:string) => decodeURI(h.replace("#", ""))
+  const clean = (h: string) => decodeURI(h.replace("#", ""))
 
   const [hash, setHash] = React.useState<string>(() => clean(window.location.hash));
 
   const hashChangeHandler = React.useCallback(() => {
-    const h =  clean(window.location.hash)
-   
+    const h = clean(window.location.hash)
+
     setHash(h);
   }, []);
 
@@ -31,7 +32,7 @@ const useHash = () => {
   }, []);
 
   const updateHash = React.useCallback(
-    (newHash:string) => {
+    (newHash: string) => {
       if (newHash !== hash) window.location.hash = newHash;
     },
     [hash]
@@ -41,7 +42,9 @@ const useHash = () => {
 };
 
 const Tab = (props: ITabProps): JSX.Element => {
-  return <div onClick={props?.onSelect} className={`${props.nobreak ? styles.tabnobreak : styles.tab} ${props.isSelected ? styles.selected : styles.unselected} `} >{props?.text}</div>
+  const {noborder, tabColors,nobreak,isSelected} = props
+  return <div onClick={props?.onSelect} 
+  className={`${nobreak ? styles.tabnobreak : styles.tab} ${isSelected ? (noborder ? styles.selectednoborder: styles.selected) : (noborder ? styles.unselectednoborder: styles.unselected)} `} >{props?.text}</div>
 
 
   // return (
@@ -52,18 +55,19 @@ const Tab = (props: ITabProps): JSX.Element => {
   //   backgroundColor:props.isSelected ? props.tabColors.activeBack : props.tabColors.passiveBack,
   //   color:props.isSelected ? props.tabColors.activeText : props.tabColors.passiveText,
   //   borderBottom : props.isSelected ? props.tabColors.activeBorder : props.tabColors.passiveBorder
-  
+
   // }} className={` ${props.nobreak ? styles.tabnobreak : styles.tab}  `} >{props?.text}</div>
   // )
 
 }
 export default function NexiTabs(props: INexiTabsProps): JSX.Element {
 
-  const { 
+  const {
     tabs,
     hasTeamsContext,
     noWhiteSpaceBreak,
-    colors
+    colors,
+    noBorders
 
   } = props;
 
@@ -82,15 +86,15 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
   border-bottom: 2px solid #2D32A900;
 }
    */
-  const defaultTabColors : TabColors = {
+  const defaultTabColors: TabColors = {
     "activeText": "#2D32A9",
     "activeBack": "rgba(182, 185, 236, 0.5)",
     "activeBorder": "#2px solid #2D32A9",
-"cursor":"pointer",
-    "passiveText" :"#000000",
+    "cursor": "pointer",
+    "passiveText": "#000000",
     "passiveBack": "rgba(182, 185, 236, 0.1)",
     "passiveBorder": "2px solid #2D32A910"
-   
+
   }
   const tabsElements = tabs?.split("\n")
   const [selectedTab, setselectedTab] = useState(0)
@@ -99,16 +103,16 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
   const [sections, setSections] = useState<any[]>([])
   const [tabColors, setTabColors] = useState<TabColors>(defaultTabColors)
   useEffect(() => {
-   
-      setselectedTabText(hash || tabsElements[0])
-    
+
+    setselectedTabText(hash || tabsElements[0])
+
   }, [hash])
 
 
   useEffect(() => {
 
-    const isEditing=  document.location.href.indexOf("Mode=Edit") !== -1
-    
+    const isEditing = document.location.href.indexOf("Mode=Edit") !== -1
+
 
     const els = document.getElementsByClassName("Collapsible")
     const sec: any[] = []
@@ -117,58 +121,60 @@ export default function NexiTabs(props: INexiTabsProps): JSX.Element {
       const title = el.querySelector("h2")?.innerText
       const collapsibleHeader = el.firstChild as HTMLElement
       collapsibleHeader.style.display = none
-     // el.style.backgroundColor = title === selectedTabText ? "green": "red"
-     
-     el.style.display = title === selectedTabText ? "block": none
-     el.style.border =  "2px solid #2D32A9"
-     //el.style.backgroundColor = "#2D32A910"
-     el.style.borderRadius="16px"
-     el.style.marginTop="-48px"
-     el.style.marginBottom="16px"
-     //el.style.borderRadius="16px"
+      // el.style.backgroundColor = title === selectedTabText ? "green": "red"
+
+      el.style.display = title === selectedTabText ? "block" : none
+      if (!noBorders) {
+        el.style.border = "2px solid #2D32A9"
+        //el.style.backgroundColor = "#2D32A910"
+        el.style.borderRadius = "16px"
+        el.style.marginTop = "-48px"
+        el.style.marginBottom = "16px"
+      }
+      //el.style.borderRadius="16px"
       sec.push(title)
 
       setSections(sec)
     });
 
-     // for loop over tabs
-     for (let x = 0;x<tabsElements.length;x++)
-     {
-        if (tabsElements[x] === selectedTabText){
-          if (selectedTabText){
-          setselectedTab(x)}
+    // for loop over tabs
+    for (let x = 0; x < tabsElements.length; x++) {
+      if (tabsElements[x] === selectedTabText) {
+        if (selectedTabText) {
+          setselectedTab(x)
         }
-     }
+      }
+    }
   }, [selectedTabText])
 
   useEffect(() => {
-    
-   try {
-    const tabColors : TabColors = JSON.parse(colors)
-   // setTabColors(tabColors)
-   } catch (error) {
-    setTabColors(defaultTabColors)
-   }
-     
-    
- 
+
+    try {
+      const tabColors: TabColors = JSON.parse(colors)
+      // setTabColors(tabColors)
+    } catch (error) {
+      setTabColors(defaultTabColors)
+    }
+
+
+
   }, [colors])
 
   return (
 
 
-    <section className={`${ styles.nexiTabs} ${hasTeamsContext ? styles.teams : ''}`}>
+    <section className={`${styles.nexiTabs} ${hasTeamsContext ? styles.teams : ''}`}>
 
-      <div className={`${noWhiteSpaceBreak ? styles.tabsnobreak: styles.tabs} `} >
+      <div className={`${noWhiteSpaceBreak ? styles.tabsnobreak : styles.tabs} `} style={noBorders?{height:"48px",borderBottom:"2px solid #7E87980D"}:{}} >
         {tabs?.split("\n").map((tab: string, ix: number) => {
-          return <Tab tabColors={tabColors} nobreak={noWhiteSpaceBreak} isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => { 
-            setHash( tab)
-          //  setselectedTab(ix) 
-          //  setselectedTabText(tab)
+          return <Tab tabColors={tabColors} noborder={noBorders} nobreak={noWhiteSpaceBreak} isSelected={selectedTab === ix} key={ix} text={escape(tab)} onSelect={() => {
+            setHash(tab)
+            //  setselectedTab(ix) 
+            //  setselectedTabText(tab)
 
           }} />
         })}
-        
+
       </div>
 
       {/*

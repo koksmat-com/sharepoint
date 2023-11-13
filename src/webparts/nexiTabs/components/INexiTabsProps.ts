@@ -12,6 +12,7 @@ export interface INexiTabsProps {
   tabs: string;
   colors?:string;
   noWhiteSpaceBreak : boolean;
+  noBorders: boolean;
   isDarkTheme: boolean;
   environmentMessage: string;
   hasTeamsContext: boolean;

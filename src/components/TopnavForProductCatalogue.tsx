@@ -154,7 +154,7 @@ export const TopnavForProductCatalogue = (props: ITopNavigation): JSX.Element =>
             const appBar: HTMLElement = document.getElementsByClassName("sp-appBar")[0] as HTMLElement
             if (appBar) appBar.style.display = isVisible ? "none" : "block"
             const article: HTMLElement = document.getElementsByTagName("article")[0] as HTMLElement
-            if (article) article.style.marginTop = isVisible ? "70px" : "0px"
+            if (article) article.style.marginTop = isVisible ? "90px" : "0px"
             const spSiteHeader: HTMLElement = document.getElementById("spSiteHeader") as HTMLElement
             if (spSiteHeader) spSiteHeader.style.display = isVisible ? "none" : "block"
 

@@ -19,6 +19,7 @@ import { INexiTabsProps } from './components/INexiTabsProps';
 export interface INexiTabsWebPartProps {
   tabs: string;
   nobreak: boolean;
+  noborders:boolean;
   colors:string
   
 }
@@ -38,11 +39,13 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
       {
         tabs: this.properties.tabs,
         noWhiteSpaceBreak: this.properties.nobreak,
+        noBorders: this.properties.noborders,
         colors: this.properties.colors,
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        
        
       }
     );
@@ -125,6 +128,7 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
                   multiline:true,
                   label: "Tabs"
                 }),
+                
                 // PropertyPaneTextField('colors', {
                 //   multiline:true,
                 //   label: `Colors`,
@@ -144,6 +148,10 @@ export default class NexiTabsWebPart extends BaseClientSideWebPart<INexiTabsWebP
                 PropertyPaneToggle('nobreak', {
                   
                   label: "No white space break"
+                }),
+                PropertyPaneToggle('noborders', {
+                  
+                  label: "No borders"
                 })
               ]
             }
