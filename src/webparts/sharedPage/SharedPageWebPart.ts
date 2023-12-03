@@ -3,7 +3,8 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
@@ -12,11 +13,20 @@ import * as strings from 'SharedPageWebPartStrings';
 import SharedPage from './components/SharedPage';
 import { ISharedPageProps } from './components/ISharedPageProps';
 
+
 export interface ISharedPageWebPartProps {
   description: string;
   url: string;
   height:string;
   width:string;
+  sendAccessToken:boolean
+}
+export async function getToken(): Promise<string> {
+  const { context } = await (window as any).moduleLoaderPromise
+  const p = await context.aadTokenProviderFactory.getTokenProvider()
+
+  const token = await p.getToken("https://graph.microsoft.com")
+  return token
 }
 
 export default class SharedPageWebPart extends BaseClientSideWebPart<ISharedPageWebPartProps> {
@@ -24,11 +34,13 @@ export default class SharedPageWebPart extends BaseClientSideWebPart<ISharedPage
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
 
-  public render(): void {
+  public async render() {
+    let accessToken = await getToken();
     const element: React.ReactElement<ISharedPageProps> = React.createElement(
       SharedPage,
       {
-        ...this.properties
+        ...this.properties,
+        accessToken: this.properties.sendAccessToken ? accessToken : null
         
       }
     );
@@ -128,6 +140,18 @@ export default class SharedPageWebPart extends BaseClientSideWebPart<ISharedPage
                 })
               ]
             },
+            {
+              groupName: strings.BasicGroupName,
+              
+              groupFields: [
+                PropertyPaneToggle('sendAccessToken', {
+                  
+                  label: "Send access token - The url has to contain the text TOKEN in order to work. Not it is case sensitive",
+                  
+                })
+              ]
+            },
+            
             {
               groupName: strings.BasicGroupName,
               groupFields: [

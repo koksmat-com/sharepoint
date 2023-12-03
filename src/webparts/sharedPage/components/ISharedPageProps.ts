@@ -3,4 +3,5 @@ export interface ISharedPageProps {
   url: string;
   height:string;
   width:string;
+  accessToken:string;
 }

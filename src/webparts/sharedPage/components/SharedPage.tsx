@@ -9,7 +9,8 @@ export default class SharedPage extends React.Component<ISharedPageProps, {}> {
       description,
       url,
       height,
-      width
+      width,
+      accessToken
     } = this.props;
     if (!url){
       return <div>
@@ -19,7 +20,7 @@ export default class SharedPage extends React.Component<ISharedPageProps, {}> {
     }
     return (
       <div>
-        <iframe src={url} width={width??"100%"} height={height??"1500px"} frameBorder="0"></iframe>
+        <iframe src={accessToken ? url.replace("TOKEN",accessToken) : url} width={width??"100%"} height={height??"1500px"} frameBorder="0"></iframe>
         </div>
     );
   }
