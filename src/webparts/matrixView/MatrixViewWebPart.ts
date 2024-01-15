@@ -10,80 +10,66 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'MatrixViewWebPartStrings';
 import MatrixView from './components/MatrixView';
-import { IMatrixViewProps, MatrixRow } from './components/IMatrixViewProps';
+import { Column, IMatrixViewProps, MatrixRow } from './components/IMatrixViewProps';
 import { SPFx,  spfi } from "@pnp/sp/presets/all";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
-
+import "@pnp/sp/files";
+import "@pnp/sp/folders";
 export interface IMatrixViewWebPartProps {
   description: string;
   columnNames : string;
-  columnsFieldName: string;
-  rowSortOrderFieldName: string;
+  matrixFilePath : string;
 }
 
 
-export interface SitePageItem {
-  "odata.type": string
-  "odata.id": string
-  "odata.etag": string
-  "odata.editLink": string
-  FileSystemObjectType: number
-  Id: number
-  ServerRedirectedEmbedUri: any
-  ServerRedirectedEmbedUrl: string
-  ContentTypeId: string
-  ComplianceAssetId: any
-  WikiField: any
-  Title?: string
-  CanvasContent1?: string
-  BannerImageUrl?: BannerImageUrl
-  Description?: string
-  PromotedState?: number
-  FirstPublishedDate: any
-  LayoutWebpartsContent?: string
-  OData__AuthorBylineId?: number[]
-  _AuthorBylineStringId?: string[]
-  OData__TopicHeader: any
-  OData__SPSitePageFlags?: string[]
-  OData__SPCallToAction: any
-  OData__OriginalSourceUrl: any
-  OData__OriginalSourceSiteId: any
-  OData__OriginalSourceWebId: any
-  OData__OriginalSourceListId: any
-  OData__OriginalSourceItemId: any
-  ValueChain?: string
-  OData__ColorTag: any
-  SortOrder?: number
-  ID: number
-  Created: string
-  AuthorId: number
-  Modified: string
-  EditorId: number
-  OData__CopySource: any
-  CheckoutUserId?: number
-  OData__UIVersionString: string
-  GUID: string
-}
 
 export interface BannerImageUrl {
   Description: string
   Url: string
 }
 
+
+
+
 export default class MatrixViewWebPart extends BaseClientSideWebPart<IMatrixViewWebPartProps> {
 
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
-  private _columns : MatrixRow[] = [];  
+  private _columns : Column[] = [];  
+private _errorMessage : string = "";
+  public async render() {
+    var errorMessage = "";
+    const sp = spfi().using(SPFx(this.context));
+    try {
+      
+   
+    //const pageItems: any[] = await sp.web.lists.getByTitle("Site Pages").items();
 
-  public render(): void {
-    
+    const matrixData = await sp.web.getFileByServerRelativePath(this.properties.matrixFilePath).getText();
+    const matrix : Column[] = JSON.parse(matrixData)
+
+    const columnsInOrder = this.properties.columnNames.split("\n")
+
+    for (let i = 0; i < columnsInOrder.length; i++) {
+      const columnName = columnsInOrder[i];
+      const column = matrix.find(column=>{
+        return column.Title === columnName
+      })
+      if(column !== undefined){
+        this._columns.push(column)
+      }
+      
+    }
+  } catch (error) {
+    console.log("Load Matrix error ",error)
+    errorMessage = error;
+  }
     const element: React.ReactElement<IMatrixViewProps> = React.createElement(
       MatrixView,
       {
        columns: this._columns,
-   
+       errorMessage
        
       }
     );
@@ -92,26 +78,8 @@ export default class MatrixViewWebPart extends BaseClientSideWebPart<IMatrixView
   }
 
   protected async onInit(): Promise<void> {
-    const sp = spfi().using(SPFx(this.context));
+   
     
-    const pageItems: any[] = await sp.web.lists.getByTitle("Site Pages").items();
-    this._columns = this.properties.columnNames.split(",").map(columnName=>{
-      const column : MatrixRow = {
-        title:columnName,
-        items:pageItems.filter(pageItem=>{
-          return pageItem[this.properties.columnsFieldName] === columnName
-        }).map(pageItem=>{
-          return {
-            url:"#",
-            displayName:pageItem.Title,
-            description:pageItem.Description
-          }
-        })
-
-      }
-      return column
-    }
-    )
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });
@@ -181,17 +149,14 @@ export default class MatrixViewWebPart extends BaseClientSideWebPart<IMatrixView
             {
               groupName: strings.BasicGroupName,
               groupFields: [
+               
                 PropertyPaneTextField('columnNames', {
+                  multiline: true,
+
                   label: "Columns"
                 }),
-                PropertyPaneTextField('columnsFieldName', {
-                  label: "Columns Mapping Field Name"
-                }),
-                PropertyPaneTextField('columnsFieldName', {
-                  label: "Columns Mapping Field Name"
-                }),
-                PropertyPaneTextField('rowSortOrderFieldName', {
-                  label: "Row order Field Name"
+                PropertyPaneTextField('matrixFilePath', {
+                  label: "Path to Matrix File"
                 })
               ]
             }

@@ -6,6 +6,7 @@
   padding: 1em;
   color: "[theme:bodyText, default: #323130]";
   color: var(--bodyText);
+
   &.teams {
     font-family: $ms-font-family-fallbacks;
   }
@@ -33,61 +34,64 @@
     }
   }
 }
+
 .tabs {
   /* Frame 2 */
 
 
-/* Auto layout */
+  /* Auto layout */
 
-display: flex;
-flex-direction: row;
-align-items: flex-start;
- 
-gap: 8px;
-isolation: isolate;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 
-//width: 236px;
-height: 48px;
+  gap: 8px;
+  isolation: isolate;
+
+  //width: 236px;
+  height: 48px;
 
 
 
-/* Inside auto layout */
+  /* Inside auto layout */
 
-flex: none;
-order: 0;
-flex-grow: 1;
+  flex: none;
+  order: 0;
+  flex-grow: 1;
 }
 
 .tabsnobreak {
   /* Frame 2 */
 
 
-/* Auto layout */
+  /* Auto layout */
 
-display: flex;
-flex-direction: row;
-align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 
-gap: 8px;
-isolation: isolate;
+  gap: 8px;
+  isolation: isolate;
 
-//width: 236px;
-height: 32px;
+  //width: 236px;
+  height: 32px;
 
 
 
-/* Inside auto layout */
+  /* Inside auto layout */
 
-flex: none;
-order: 0;
-flex-grow: 1;
+  flex: none;
+  order: 0;
+  flex-grow: 1;
 }
+
 .selected {
   background-color: #C4B6EC15;
   color: #2D32A9;
 
   border-bottom: 2px solid #2D32A9;
 }
+
 .unselected {
   background-color: rgba(126, 135, 152, 0.05);
 
@@ -97,13 +101,13 @@ flex-grow: 1;
 
 .tab {
 
-  
+
   cursor: pointer;
   // width: 188px;
   height: 100%;
   padding: 12px 24px;
   /* .System/Button */
-  
+
   font-family: 'Ubuntu', sans-serif;
   font-style: normal;
   font-weight: 500;
@@ -118,14 +122,14 @@ flex-grow: 1;
   inline-size: min-content;
   overflow-wrap: break-word;
   /* Text/Interactive */
- 
 
-  
-  
+
+
+
   /* Inside auto layout */
   display: flex;
   align-items: center;
-justify-content: center;
+  justify-content: center;
   flex: none;
   order: 1;
   flex-grow: 1;
@@ -135,13 +139,13 @@ justify-content: center;
 
 .tabnobreak {
 
-  
+
   cursor: pointer;
   // width: 188px;
   height: 100%;
   padding: 12px 24px;
   /* .System/Button */
-  
+
   font-family: 'Ubuntu', sans-serif;
   font-style: normal;
   font-weight: 500;
@@ -153,17 +157,85 @@ justify-content: center;
   text-transform: uppercase;
   text-align: center;
   font-feature-settings: 'tnum' on, 'lnum' on;
-  
-  
-  /* Text/Interactive */
- 
 
-  
-  
+
+  /* Text/Interactive */
+
+
+
+
   /* Inside auto layout */
-  
+
   flex: none;
   order: 1;
   flex-grow: 1;
   z-index: 2;
+}
+
+.matrix {
+  /* Frame 2 */
+
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  gap: 8px;
+  isolation: isolate;
+
+  //width: 236px;
+  //height: 48px;
+
+
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 0;
+  flex-grow: 1;
+}
+
+
+.matrixcolumn {
+  /* Frame 2 */
+  //width: 140px;
+  // padding-right: 12px;
+  
+}
+.matrixcolumnheader {
+  text-align: center;
+  width: 117px;
+  background-color: "#2D32A9";
+  color: "#FFFFFF";
+  align-self: "center";
+  min-width: 117px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  margin-bottom: 12px;
+  
+}
+
+
+
+
+.matrixcell {
+  /* Frame 2 */
+  cursor: pointer;
+  margin-bottom: 12px;
+  border: 1px solid #2D32A9;
+  background-color: #2D32A910;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 4px;
+  height: 60px;
+  width:128px;
+  margin-right: 12px;
 }

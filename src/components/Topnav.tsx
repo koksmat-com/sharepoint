@@ -304,6 +304,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
         setshowLeftBar(showLeftBarValue)
         setshowtranslatations(true)
+        //setIsVisible(false)
         setIsVisible(!keepStandardNavigation)
         const handler = async (ev: MessageEvent<{ type: MessageTypes, data: any }>) => {
             console.log('ev', ev)
