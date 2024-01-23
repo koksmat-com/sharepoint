@@ -226,10 +226,10 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
                     ]
                 })
             const trans: PageTranslations = await x.json()
+        
+            const translations = trans?.Items?.filter(i => i.HasPublishedVersion).map(i => i)
 
-            const translations = trans.Items.filter(i => i.HasPublishedVersion).map(i => i)
-
-
+                if (!translations) return
 
             settranslations(translations.map(t => {
                 return {
