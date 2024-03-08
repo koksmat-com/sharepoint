@@ -147,7 +147,7 @@ export interface Row {
 }
 
 
-export const TopNavigation = (props: ITopNavigation): JSX.Element => {
+export const MagicButton = (props: ITopNavigation): JSX.Element => {
     const [isVisible, setIsVisible] = useState(true)
     const [selectedNavigationNode, setselectedNavigationNode] = useState(null)
     const [showLevel2, setShowLevel2] = useState(false)
@@ -525,7 +525,7 @@ export const TopNavigation = (props: ITopNavigation): JSX.Element => {
 
             </div>
 
-            <iframe src={`${props.magicboxUrl}/magicbox?mode=leftbar&token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
+            <iframe src={`${props.magicboxUrl}/sso?mode=leftbar&token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
         </div>
     </div>
 
@@ -716,7 +716,7 @@ Here is a panel which appear 100px under the top and is 300px wide
 
                         </div>
 
-                        <iframe src={`${props.magicboxUrl}/magicbox?token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
+                        <iframe src={`${props.magicboxUrl}/sso?token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
                     </div>
                 </div>
             }
@@ -730,7 +730,7 @@ Here is a panel which appear 100px under the top and is 300px wide
 
                         </div>
 
-                        <iframe src={`${props.magicboxUrl}/magicbox?token=` + token + "&href=" + encodeURI(window.location.toString()) + "&tool=" + encodeURI(showtool.link)} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
+                        <iframe src={`${props.magicboxUrl}/sso?token=` + token + "&href=" + encodeURI(window.location.toString()) + "&tool=" + encodeURI(showtool.link)} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
                     </div>
                 </div>
             }

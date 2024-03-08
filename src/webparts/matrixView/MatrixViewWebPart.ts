@@ -3,7 +3,8 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
@@ -20,6 +21,9 @@ export interface IMatrixViewWebPartProps {
   description: string;
   columnNames : string;
   matrixFilePath : string;
+  colorMapping : string;
+  editColors : boolean;
+  colors : string;
 }
 
 
@@ -30,8 +34,30 @@ export interface BannerImageUrl {
 }
 
 
+const getColorMapping = (colorMapping : string) => {
+  try {
+    return JSON.parse(colorMapping);
+  } catch (error) {
+    return {}
+  }
+  
+}
 
-
+const getColorNameValues = ( colors : string) => {
+  if (!colors) return [
+    {title: "Red", rgb: "#FF0000",tag: "R"},
+    {title: "Green", rgb: "#00FF00",tag:"G"},
+    {title: "Blue", rgb: "#0000FF",tag:"B"},
+  ]
+  return colors.split("\n").map(color=>{
+    const s = color.split("|")
+    return {
+      title: s[0],
+      rgb: s[1],
+      tag: s[2] ?? s[0].substring(0,1)
+    }
+  })
+}
 export default class MatrixViewWebPart extends BaseClientSideWebPart<IMatrixViewWebPartProps> {
 
   private _isDarkTheme: boolean = false;
@@ -47,16 +73,21 @@ private _errorMessage : string = "";
     //const pageItems: any[] = await sp.web.lists.getByTitle("Site Pages").items();
 
     const matrixData = await sp.web.getFileByServerRelativePath(this.properties.matrixFilePath).getText();
+    
     const matrix : Column[] = JSON.parse(matrixData)
-
+    const editColors = this.properties.editColors;
+    const colorMap = getColorMapping(this.properties.colorMapping)
     const columnsInOrder = this.properties.columnNames.split("\n")
-
+    this._columns = []
     for (let i = 0; i < columnsInOrder.length; i++) {
-      const columnName = columnsInOrder[i];
+      const s = columnsInOrder[i].split("|")
+      const columnName = s[0]
       const column = matrix.find(column=>{
         return column.Title === columnName
       })
       if(column !== undefined){
+        const w = parseInt(s[1])
+        column.Width = w > 1 ? w : 1
         this._columns.push(column)
       }
       
@@ -69,8 +100,9 @@ private _errorMessage : string = "";
       MatrixView,
       {
        columns: this._columns,
-       errorMessage
-       
+       errorMessage,
+        editColors: this.properties.editColors,
+        colors: getColorNameValues(this.properties.colors)
       }
     );
 
@@ -152,8 +184,23 @@ private _errorMessage : string = "";
                
                 PropertyPaneTextField('columnNames', {
                   multiline: true,
-
                   label: "Columns"
+                }),
+                PropertyPaneToggle('editColors', {
+                  onText: "Edit",
+                  offText: "View",
+
+                  label: "Mapping"
+                }),
+                PropertyPaneTextField('colors', {
+                  multiline: true,
+
+                  label: "Colors"
+                }),
+                PropertyPaneTextField('colorMapping', {
+                  multiline: true,
+
+                  label: "Mapping"
                 }),
                 PropertyPaneTextField('matrixFilePath', {
                   label: "Path to Matrix File"

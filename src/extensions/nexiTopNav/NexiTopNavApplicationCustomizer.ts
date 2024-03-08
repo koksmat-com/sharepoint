@@ -49,7 +49,8 @@ import { enrichWithPageTabs, getQuickLaunch, NavigationNode } from "../../helper
 import { TopNavigation, ITopNavigation } from "../../components/Topnav";
 import { TopnavForProductCatalogue } from "../../components/TopnavForProductCatalogue";
 import { Web } from "@pnp/sp/webs";
-import { ItemView } from "src/components/ListItemViewer";
+import { ItemView ,IListItemViewer} from "../../components/ListItemViewer";
+import {MagicButton} from "../../components/MagicButton";
 
 const LOG_SOURCE: string = "NexiTopNavApplicationCustomizer";
 
@@ -118,7 +119,9 @@ export interface ConfigItem {
 
 /** A Custom Action which can be run during execution of a Client Side Application */
 export default class NexiTopNavApplicationCustomizer extends BaseApplicationCustomizer<INexiTopNavApplicationCustomizerProperties> {
+  
   public async onInit(): Promise<void> {
+    
     Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
 
 
@@ -131,41 +134,37 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
 
     const items: ConfigItem[] = await spWebIntra365.lists.getByTitle("Configuration").items();
     const hubsiteData = await spWebInscope.web.hubSiteData()
+    let hasMagicListItem = false
+
+
+    const setIsVisible = (visible: boolean) => {
+      
+     // this._isVisible = visible
+    }
     if (document.location.href.toLowerCase().indexOf("/lists/") > -1) {
+      
       const spWebMagicLists = Web([spWebInscope.web, currentWebUrl]); 
       const href = document.location.href.toLowerCase()
       const listname = href.split("/lists/")[1].split("/")[0]
+      const id = href.split("?id=")[1].split("&")[0]
 
+      
+      const listnameId = parseInt(id)
+      
+      
+      
+      const itemDatas = await spWebMagicLists.lists.getByTitle(listname).items() //.qu .filter(`ID eq ${listname}`).getAll()
+      const itemData = itemDatas.find(item => { return item.Id === listnameId })
       const magiclists: any[] = await spWebMagicLists.lists.getByTitle("Magic Lists").items()
       
       const item = magiclists.find(item => { return item.Title.toLowerCase() === listname })
       if (item) {
-        let configItem2 : ConfigItem = {
-          "odata.type": "",
-          "odata.id": "",
-          "odata.etag": "",
-          "odata.editLink": "",
-          FileSystemObjectType: 0,
-          Id: 0,
-          ServerRedirectedEmbedUri: undefined,
-          ServerRedirectedEmbedUrl: "",
-          Title: "",
-          NavigationBartype: "Intranet",
-          LogoURL: "",
-          ContentTypeId: "",
-          OData__ColorTag: undefined,
-          ComplianceAssetId: undefined,
-          Trackingcode: "",
-          ID: 0,
-          Modified: "",
-          Created: "",
-          AuthorId: 0,
-          EditorId: 0,
-          OData__UIVersionString: "",
-          Attachments: false,
-          GUID: ""
-        }
-       this.drawTopItem(configItem2)
+        hasMagicListItem = true
+        let html = item.html
+        let script = item.script
+        let itemjson = JSON.stringify(itemData,null,2)
+
+       this.drawTopItem(html,script,itemjson)
       }
       
     }
@@ -186,13 +185,18 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
     script.innerText = trackingCode.replace(/(?:\r\n|\r|\n)/g, ';');
 
     document.body.appendChild(script);
-    if ((document.location.href.indexOf("_layouts/15") < 0)
+    if (configItem.NavigationBartype !== "Product Catalogue"){
+      //this.drawTopNav(configItem,setIsVisible);
+    }
+    if (
+      hasMagicListItem ||(
+      (document.location.href.indexOf("_layouts/15") < 0)
       && (document.location.href.toLowerCase().indexOf("/lists/") < 0)
       && (document.location.href.toLowerCase().indexOf("/sitepages/forms/") < 0)
-      && (document.location.href.toLowerCase().indexOf("?mode=edit") < 0)
+      && (document.location.href.toLowerCase().indexOf("?mode=edit") < 0))
 
     ) {
-      this.drawTopNav(configItem);
+      this.drawTopNav(configItem,setIsVisible);
     }
     return Promise.resolve();
   }
@@ -201,7 +205,8 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
     return this.context;
   }
 
-  private drawTopNav(configItem: ConfigItem) {
+
+  private drawTopNav(configItem: ConfigItem,setIsVisible: (visible: boolean) => void){
     const run = async () => {
       if (!configItem) {
         return console.log("WARNING: No config found for this site")
@@ -288,17 +293,17 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
 
       const topNavigationProps: ITopNavigation = {
         applicationContext: this,
-        left: quickLaunch.filter((node) => { return node.Title !== "Recent" }),
+        left: quickLaunch.filter((node) => { return node.Title !== "Recent"; }),
         right: hubsiteNav,
         sp,
         hubConfig: nexiNavConfig,
         homeUrl: nexiNavConfig.homeUrl,
         magicboxUrl: nexiNavConfig.magicboxurl,
-        logoUrl: nexiNavConfig.logoUrl
-
+        logoUrl: nexiNavConfig.logoUrl,
+        setIsVisible
       };
       const elem: React.ReactElement<ITopNavigation> = React.createElement(
-        configItem.NavigationBartype !== "Product Catalogue" ? TopNavigation : TopnavForProductCatalogue,
+        configItem.NavigationBartype !== "Product Catalogue" ? MagicButton : TopnavForProductCatalogue,
         topNavigationProps
       );
       // eslint-disable-next-line @microsoft/spfx/pair-react-dom-render-unmount
@@ -312,110 +317,31 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
 
 
 
-  private drawTopItem(configItem: ConfigItem) {
+  private drawTopItem(html :string,script:string,item:string) {
     const run = async () => {
-      if (!configItem) {
-        return console.log("WARNING: No config found for this site")
-      }
       const doc: Document = window.document;
+  
       let topNavHTMLElement: HTMLElement = doc.querySelector(
-        "." + styles.topNavigationContainer
+        "." + styles.topItemContainer
       );
 
       if (!topNavHTMLElement) {
         topNavHTMLElement = doc.createElement("div");
-        topNavHTMLElement.className = styles.topNavigationContainer
+        topNavHTMLElement.className = styles.topItemContainer
         document.body.appendChild(topNavHTMLElement);
       }
-
-
-      // topNavHTMLElement.innerHTML = "<div></div>";
-      // document.body.appendChild(topNavHTMLElement);
-      const sp = spfi().using(SPFx(this.context));
-
-      const hubsiteData = await sp.web.hubSiteData()
-
-      let quickLaunch: any[] = []
-
-      try {
-        quickLaunch = [...getQuickLaunch(
-          this.context.pageContext.legacyPageContext
-        )]
-      } catch (error) {
-
-        console.log("error", error)
+      const itemViewProps : IListItemViewer = {
+        html,
+        script,
+        item:item,
+        ishidden:false
       }
 
-
-
-
-
-
-      const relatedHubSiteIds: string[] = hubsiteData.relatedHubSiteIds;
-
-
-      const hubSiteId = relatedHubSiteIds[0];
-      const hubSite = await sp.hubSites.getById(hubSiteId).getSite();
-      const siteData = await hubSite();
-      const serverRelativeUrl = siteData.ServerRelativeUrl;
-
-      const hubKey = "nexinav" + serverRelativeUrl;
-      let hubConfig = null;
-
-      type NewType = NexiNavConfig;
-
-      const defaultConfig: NewType = {
-        enabled: true,
-        parents: [],
-        logoUrl: configItem.LogoURL ?? "",
-        showSearch: configItem.ShowSearch,
-        hideHome: false,
-        homeUrl: configItem.HomeURL,
-        showSiteTitle: true,
-        siteUrl: "",
-        siteTitle: "",
-
-        magicboxurl: configItem.magicboxurl
-      }
-      hubConfig = {
-        Key: hubKey,
-        Value: JSON.stringify(defaultConfig)
-
-      }
-
-
-
-
-
-      const nexiNavConfig: NexiNavConfig = JSON.parse(hubConfig.Value);
-      console.log("nexiNavConfig", nexiNavConfig)
-
-      if (!nexiNavConfig.enabled) return
-
-      nexiNavConfig.siteUrl = this.context.pageContext.web.absoluteUrl;
-      nexiNavConfig.siteTitle = this.context.pageContext.web.title;
-
-      const hubsiteNav: NavigationNode[] = hubsiteData.navigation; //await this.context.pageContext.web.getHubSiteData().then((data: IHubSiteWebData) => {
-
-      const topNavigationProps: ITopNavigation = {
-        applicationContext: this,
-        left: quickLaunch.filter((node) => { return node.Title !== "Recent" }),
-        right: hubsiteNav,
-        sp,
-        hubConfig: nexiNavConfig,
-        homeUrl: nexiNavConfig.homeUrl,
-        magicboxUrl: nexiNavConfig.magicboxurl,
-        logoUrl: nexiNavConfig.logoUrl
-
-      };
       const elem = React.createElement(
        ItemView,
-        {}
+       itemViewProps
       );
-      // eslint-disable-next-line @microsoft/spfx/pair-react-dom-render-unmount
       ReactDOM.render(elem, topNavHTMLElement);
-
-
 
     };
     run().then().catch(console.error);

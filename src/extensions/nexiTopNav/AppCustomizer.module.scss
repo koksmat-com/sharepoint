@@ -47,6 +47,16 @@
     background-color: #FFFFFF88;
   }
 
+  .topItemContainer {
+    z-index: 10000000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 60px;
+    background-color: #FFFFFF88;
+  }
+
   .breadcrumbContainer {
     display: flex;
     justify-content: center;

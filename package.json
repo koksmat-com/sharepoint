@@ -9,7 +9,6 @@
   "scripts": {
     "build": "gulp bundle",
     "clean": "gulp clean",
-    "test": "gulp test",
     "trust": "gulp trust-dev-cert",
     "serve": "gulp serve",
     "ship": "gulp package-solution --ship",
@@ -32,6 +31,7 @@
     "@microsoft/sp-webpart-base": "1.17.3",
     "@pnp/graph": "^3.17.0",
     "@pnp/sp": "^3.12.1",
+    "handlebars": "^4.7.8",
     "language-tags": "^1.0.9",
     "office-ui-fabric-react": "^7.199.1",
     "react": "17.0.1",

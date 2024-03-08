@@ -22,10 +22,11 @@ export interface ISharedPageWebPartProps {
   sendAccessToken:boolean
 }
 export async function getToken(): Promise<string> {
+  
   const { context } = await (window as any).moduleLoaderPromise
   const p = await context.aadTokenProviderFactory.getTokenProvider()
-
-  const token = await p.getToken("https://graph.microsoft.com")
+//debugger
+  const token = await p.getToken("https://graph.microsoft.com",false)
   return token
 }
 
