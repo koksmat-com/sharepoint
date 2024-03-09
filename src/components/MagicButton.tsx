@@ -356,8 +356,9 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
                         }
                         break
                     case "closemagicbox":
-                        props.setIsVisible(false)
-                        setIsVisible(false)
+                        props.setIsVisible(!isVisible)
+                        setIsVisible(!isVisible)
+                        setshowMagicbox(!showMagicbox)
                         break
                     case "hidetool":
                         setshowtool(null)
@@ -449,6 +450,7 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
     }, [])
 
     useEffect(() => {
+        return
         try {
 
 
@@ -550,20 +552,23 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
             )
         })}</div>
 
-    if (!isVisible) return <div style={{
+
+    return (
+        <div>
+             <div style={{
         position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
     }} onClick={() => {
-        props.setIsVisible(true)
-        setIsVisible(true)
-        setshowMagicbox(false)
+   
+        props.setIsVisible(!isVisible)
+        setIsVisible(!isVisible)
+        setshowMagicbox(!showMagicbox)
         localStorage.setItem("standardnavigation", "false")
     }}>
-        Turn on branding
+        {isVisible ? "Turn on branding" : "Turn off branding"}
         {magicbuttonComms}
     </div>
-    return (
-        <div
+        {false && <div
             style={{
                 position: 'fixed', top: 0, left: 0, width: "100vw", color: "#2D32AA", backgroundColor: "#ffffff", zIndex: "10000000",
 
@@ -704,6 +709,8 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
 
                 </div>
             }
+            </div>}
+            <div>
             {/* 
 Here is a panel which appear 100px under the top and is 300px wide
 */}
@@ -735,6 +742,7 @@ Here is a panel which appear 100px under the top and is 300px wide
                 </div>
             }
         </div>
+             </div>
     )
 }
 

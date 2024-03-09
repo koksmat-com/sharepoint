@@ -186,7 +186,24 @@ export default class NexiTopNavApplicationCustomizer extends BaseApplicationCust
 
     document.body.appendChild(script);
     if (configItem.NavigationBartype !== "Product Catalogue"){
-      //this.drawTopNav(configItem,setIsVisible);
+      if (
+        hasMagicListItem 
+  
+      ) {
+        this.drawTopNav(configItem,setIsVisible);
+      }else
+      {
+        if (
+          hasMagicListItem ||(
+          (document.location.href.indexOf("_layouts/15") < 0)
+          && (document.location.href.toLowerCase().indexOf("/lists/") < 0)
+          && (document.location.href.toLowerCase().indexOf("/sitepages/forms/") < 0)
+          && (document.location.href.toLowerCase().indexOf("?mode=edit") < 0))
+    
+        ) {
+          this.drawTopNav(configItem,setIsVisible);
+        }
+      }
     }
     if (
       hasMagicListItem ||(
