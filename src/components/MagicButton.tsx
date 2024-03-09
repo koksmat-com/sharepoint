@@ -25,6 +25,17 @@ import { ContentType } from '@pnp/sp/content-types';
 import { CgInfinity } from "react-icons/cg"
 import * as tags from "language-tags"
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown"
+
+
+function MagicButtonIcon(){
+    return <div className='magicbuttonicon'>
+<svg width="24" height="24" viewBox="0 0 213 213" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M55 0C24.6243 0 0 24.6243 0 55V158C0 188.376 24.6243 213 55 213H158C188.376 213 213 188.376 213 158V55C213 24.6243 188.376 0 158 0H55ZM139.45 41.3111L133.5 23L127.55 41.3111H108.297L123.873 52.6279L117.924 70.9389L133.5 59.6221L149.076 70.9389L143.127 52.6279L158.703 41.3111H139.45ZM118.226 141.549L107 107L95.7743 141.549H59.4472L88.8364 162.902L77.6107 197.451L107 176.098L136.389 197.451L125.164 162.902L154.553 141.549H118.226ZM72 43L79.858 67.1844H105.287L84.7145 82.1312L92.5725 106.316L72 91.3688L51.4275 106.316L59.2855 82.1312L38.713 67.1844H64.142L72 43Z" fill="#233862"/>
+</svg>
+
+
+    </div>
+}
 export async function getToken(): Promise<string> {
     const { context } = await (window as any).moduleLoaderPromise
     const p = await context.aadTokenProviderFactory.getTokenProvider()
@@ -556,7 +567,7 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
     return (
         <div>
              <div style={{
-        position: 'fixed', top: "44px", right: "16px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
+        position: 'fixed', top: "12px", right: "200px", backgroundColor: "#ffffff", zIndex: "10000000", cursor: "pointer", fontSize: "12px",
         fontFamily: "'Ubuntu', sans-serif"
     }} onClick={() => {
    
@@ -565,7 +576,9 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
         setshowMagicbox(!showMagicbox)
         localStorage.setItem("standardnavigation", "false")
     }}>
-        {isVisible ? "Turn on branding" : "Turn off branding"}
+     
+        <MagicButtonIcon />
+        
         {magicbuttonComms}
     </div>
         {false && <div
