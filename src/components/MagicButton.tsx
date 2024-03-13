@@ -25,6 +25,7 @@ import { ContentType } from '@pnp/sp/content-types';
 import { CgInfinity } from "react-icons/cg"
 import * as tags from "language-tags"
 import { Dropdown } from "office-ui-fabric-react/lib/Dropdown"
+import { jwtDecode } from 'jwt-decode';
 
 
 function MagicButtonIcon(){
@@ -180,6 +181,8 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
     const [showtool, setshowtool] = useState<ToolProps | null>(null)
     const [showLeftBar, setshowLeftBar] = useState(false)
     const [showtranslatations, setshowtranslatations] = useState(false)
+    const [showButton, setshowButton] = useState(false)
+    const [magicboxloaded, setmagicboxloaded] = useState(false)
     const pageContextChanged = () => {
         console.log("pageContextChanged")
         setPageContext(props.applicationContext.ctx.pageContext)
@@ -367,9 +370,10 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
                         }
                         break
                     case "closemagicbox":
-                        props.setIsVisible(!isVisible)
-                        setIsVisible(!isVisible)
-                        setshowMagicbox(!showMagicbox)
+                        props.setIsVisible(false)
+                        setIsVisible(false)
+                        setshowMagicbox(false)
+                        setmagicboxloaded(false)
                         break
                     case "hidetool":
                         setshowtool(null)
@@ -391,7 +395,7 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
 
                         break
                     case "context":
-
+                       setmagicboxloaded(true)
                         const ctx = props.applicationContext.ctx.pageContext.legacyPageContext ?? {}
                         const data = JSON.stringify(ctx)
 
@@ -441,21 +445,32 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
     }, [observer])
     useEffect(() => {
         const load = async () => {
-            setToken((await getToken()))
+            const accesstoken = await getToken()
+            const j : any = jwtDecode(accesstoken)
+            
+            setToken(accesstoken)
+            
+            if (j.upn === "niels.johansen@nexigroup.com"){
+                setshowButton(true)
+            }
+            if (j.upn === "karlo.mrakovcic@nexigroup.com"){
+                setshowButton(true)
+            }
         }
         load().then(() => { console.log("") }).catch((e) => { console.log(e) })
-        var pageChrome: any = document.querySelector(".SPPageChrome");
-        var suppressHack = true
+       
+        // var pageChrome: any = document.querySelector(".SPPageChrome");
+        // var suppressHack = true
 
-        var editMode = document.location.href.indexOf("Mode=Edit") === -1 ? false : true
-        if (pageChrome && !editMode) {
-            pageChrome.style.height = "10000px";
-            setTimeout(() => {
-                var pageChrome: any = document.querySelector(".SPPageChrome");
-                pageChrome.style.height = "100%";
-            }, 2000)
+        // var editMode = document.location.href.indexOf("Mode=Edit") === -1 ? false : true
+        // if (pageChrome && !editMode) {
+        //     pageChrome.style.height = "10000px";
+        //     setTimeout(() => {
+        //         var pageChrome: any = document.querySelector(".SPPageChrome");
+        //         pageChrome.style.height = "100%";
+        //     }, 2000)
 
-        }
+        // }
 
 
     }, [])
@@ -503,10 +518,12 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
         setshowSubNav(false)
     }
 
-
-    if (!isDesktopWidth) {
+    if (!showButton) {
         return <div></div>
     }
+    // if (!isDesktopWidth) {
+    //     return <div></div>
+    // }
 
 
     if (isInFrame()) {
@@ -574,6 +591,7 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
         props.setIsVisible(!isVisible)
         setIsVisible(!isVisible)
         setshowMagicbox(!showMagicbox)
+        setmagicboxloaded(false)
         localStorage.setItem("standardnavigation", "false")
     }}>
      
@@ -656,6 +674,7 @@ export const MagicButton = (props: ITopNavigation): JSX.Element => {
                         <div title="Click to get editor options" style={{ position: "fixed", top: "30px", right: "10px", cursor: "pointer" }} onClick={() => {
 
                             setshowMagicbox(!showMagicbox)
+                            setmagicboxloaded(false)
 
                         }}>
                             {/* <svg width="16" height="16" viewBox="0 0 213 213" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -729,14 +748,14 @@ Here is a panel which appear 100px under the top and is 300px wide
 */}
             {showMagicbox &&
                 <div style={{ position: "absolute" }}>
-                    <div style={{ position: "fixed", right: "0px", top: "80px", width: "100vw", height: "calc(100vh - 80px)" }}>
+                    <div style={{ position: "fixed", right: "0px", top: "80px", width:  magicboxloaded ?"100vw":"10vw", height: "calc(100vh - 80px)" }}>
                         <div style={{ display: "flex" }} >
                             <div style={{ flexGrow: "1" }} />
 
 
                         </div>
 
-                        <iframe src={`${props.magicboxUrl}/sso?token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: false ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
+                        <iframe src={`${props.magicboxUrl}/sso?token=` + token + "&href=" + encodeURI(window.location.toString())} style={{ backgroundColor: !magicboxloaded ? "red" : "transparent", width: "100%", height: "100%", border: "0px" }} />
                     </div>
                 </div>
             }
