@@ -3,7 +3,8 @@
   "solution": {
     "name": "Intra365",
     "id": "f3b33923-ad59-4786-b1aa-12ea9db679ef",
-    "version": "2.0.11.2",
+    "version": "2.0.11.4",
+    "iconPath": "icon.png",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -19,7 +20,7 @@
         "default": "Better navigation and some usefull webparts"
       },
       "longDescription": {
-        "default": "Intra365 by Koksmat is a community developed SharePoint extions focusing on make a better navigation experience in SharePoint as well as act as an integration manager of overlays"
+        "default": "Magic Button by Koksmat is a community developed SharePoint extions focusing on make a better navigation experience in SharePoint as well as act as an integration manager of overlays"
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -27,8 +28,8 @@
     },
     "features": [
       {
-        "title": "intra365 Feature",
-        "description": "The feature that activates elements of the Intra365 solution.",
+        "title": "Magic Button",
+        "description": "The feature that activates elements of the Magic Button solution.",
         "id": "b8477d0a-ab27-4222-945f-b8afb4b7f3eb",
         "version": "1.0.0.0",
         "assets": {
