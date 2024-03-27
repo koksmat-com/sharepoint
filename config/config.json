@@ -81,6 +81,14 @@
           "manifest": "./src/webparts/sharedPage/SharedPageWebPart.manifest.json"
         }
       ]
+    },
+    "magic-button-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/magicButton/MagicButtonWebPart.js",
+          "manifest": "./src/webparts/magicButton/MagicButtonWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
@@ -94,6 +102,7 @@
     "NewsWebPartStrings": "lib/webparts/news/loc/{locale}.js",
     "RolluppageWebPartStrings": "lib/webparts/rolluppage/loc/{locale}.js",
     "MatrixViewWebPartStrings": "lib/webparts/matrixView/loc/{locale}.js",
-    "SharedPageWebPartStrings": "lib/webparts/sharedPage/loc/{locale}.js"
+    "SharedPageWebPartStrings": "lib/webparts/sharedPage/loc/{locale}.js",
+    "MagicButtonWebPartStrings": "lib/webparts/magicButton/loc/{locale}.js"
   }
 }

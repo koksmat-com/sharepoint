@@ -3,65 +3,33 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneToggle
+  PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
-import * as strings from 'SharedPageWebPartStrings';
-import SharedPage from './components/SharedPage';
-import { ISharedPageProps } from './components/ISharedPageProps';
+import * as strings from 'MagicButtonWebPartStrings';
+import MagicButton from './components/MagicButton';
+import { IMagicButtonProps } from './components/IMagicButtonProps';
 
-
-export interface ISharedPageWebPartProps {
+export interface IMagicButtonWebPartProps {
   description: string;
-  url: string;
-  urldev:string;
-  urltest:string;
-  height:string;
-  width:string;
-  sendAccessToken:boolean
-}
-export async function getToken(): Promise<string> {
-  
-  const { context } = await (window as any).moduleLoaderPromise
-  const p = await context.aadTokenProviderFactory.getTokenProvider()
-//debugger
-  const token = await p.getToken("https://graph.microsoft.com",false)
-  return token
 }
 
-export default class SharedPageWebPart extends BaseClientSideWebPart<ISharedPageWebPartProps> {
+export default class MagicButtonWebPart extends BaseClientSideWebPart<IMagicButtonWebPartProps> {
 
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
 
-  getUrl = () => {
-    const env = localStorage.getItem('magicboxenv')
-    let url = ""
-    switch (env){
-      case "dev":
-        url = this.properties.urldev ?? this.properties.url
-        break
-      case "test":
-        url =  this.properties.urltest ?? this.properties.url
-        break
-      default:
-        url = this.properties.url
-    }
-  
-    return url
-  }
-  public async render() {
-    let accessToken = await getToken();
-    const element: React.ReactElement<ISharedPageProps> = React.createElement(
-      SharedPage,
+  public render(): void {
+    const element: React.ReactElement<IMagicButtonProps> = React.createElement(
+      MagicButton,
       {
-        ...this.properties,
-        accessToken: this.properties.sendAccessToken ? accessToken : null,
-        url: this.getUrl(),
-        
+        description: this.properties.description,
+        isDarkTheme: this._isDarkTheme,
+        environmentMessage: this._environmentMessage,
+        hasTeamsContext: !!this.context.sdks.microsoftTeams,
+        userDisplayName: this.context.pageContext.user.displayName
       }
     );
 
@@ -136,58 +104,6 @@ export default class SharedPageWebPart extends BaseClientSideWebPart<ISharedPage
             description: strings.PropertyPaneDescription
           },
           groups: [
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('url', {
-                  label: "URL"
-                })
-              ]
-            },
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('urltest', {
-                  label: "Test URL"
-                })
-              ]
-            },
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('urldev', {
-                  label: "Developer URL"
-                })
-              ]
-            },
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('height', {
-                  label: "Height"
-                })
-              ]
-            },
-            {
-              groupName: strings.BasicGroupName,
-              groupFields: [
-                PropertyPaneTextField('width', {
-                  label: "width"
-                })
-              ]
-            },
-            {
-              groupName: strings.BasicGroupName,
-              
-              groupFields: [
-                PropertyPaneToggle('sendAccessToken', {
-                  
-                  label: "Send access token - The url has to contain the text TOKEN in order to work. Not it is case sensitive",
-                  
-                })
-              ]
-            },
-            
             {
               groupName: strings.BasicGroupName,
               groupFields: [

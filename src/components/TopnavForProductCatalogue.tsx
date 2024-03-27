@@ -259,8 +259,8 @@ export const TopnavForProductCatalogue = (props: ITopNavigation): JSX.Element =>
                             </form>}
                           
                         <div title="Click to get editor options" style={{ position: "fixed", top: "30px", right: "10px" }} onClick={() => {
-
-                            setshowMagicbox(!showMagicbox)
+                            setIsVisible(!isVisible)
+                            //setshowMagicbox(!showMagicbox)
 
                         }}>
                             <svg style={{ marginTop: "0px", cursor: "pointer" }} width="16" height="16" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">

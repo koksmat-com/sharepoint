@@ -8,6 +8,7 @@ export default class SharedPage extends React.Component<ISharedPageProps, {}> {
     const {
       description,
       url,
+
       height,
       width,
       accessToken
